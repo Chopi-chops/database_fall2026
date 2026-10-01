@@ -1,0 +1,37 @@
+postgres=# \l
+                                                                  List of databases
+    Name    |  Owner   | Encoding | Locale Provider |         Collate         |          Ctype          | Locale | ICU Rules |   Access privileges
+------------+----------+----------+-----------------+-------------------------+-------------------------+--------+-----------+-----------------------
+ books      | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ coffee     | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ postgres   | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ template0  | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           | =c/postgres          +
+            |          |          |                 |                         |                         |        |           | postgres=CTc/postgres
+ template1  | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           | =c/postgres          +
+            |          |          |                 |                         |                         |        |           | postgres=CTc/postgres
+ university | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+(6 rows)
+
+
+postgres=# \c university
+You are now connected to database "university" as user "postgres".
+university=# \dt
+Did not find any tables.
+university=# CREATE TABLE students (
+university(# id SERIAL PRIMARY KEY,
+university(# name VARCHAR(100),
+university(# age INT);
+CREATE TABLE
+university=# INSERT INTO students (name, age) VALUES ('Alice', 21), ('Bob', 23);
+INSERT 0 2
+university=# SELECT * FROM students;
+ id | name  | age
+----+-------+-----
+  1 | Alice |  21
+  2 | Bob   |  23
+(2 rows)
+
+
+university=# DROP TABLE students;
+DROP TABLE
+university=# \q
