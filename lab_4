@@ -1,0 +1,47 @@
+university=# SELECT * FROM students;
+ id |  name   |      email      | faculty
+----+---------+-----------------+---------
+  1 | Cholpon | sc11111@auca.kg | SFW
+  2 | Kamila  | kd22222@auca.kg | ECO
+  3 | Malika  | ma33333@auca.kg | SFW
+(3 rows)
+
+
+university=# SELECT name, email FROM students WHERE faculty = 'SFW';
+  name   |      email
+---------+-----------------
+ Cholpon | sc11111@auca.kg
+ Malika  | ma33333@auca.kg
+(2 rows)
+
+
+university=# SELECT id, faculty FROM students;
+ id | faculty
+----+---------
+  1 | SFW
+  2 | ECO
+  3 | SFW
+(3 rows)
+
+
+university=# SELECT name, email FROM students ORDER BY name;
+  name   |      email
+---------+-----------------
+ Cholpon | sc11111@auca.kg
+ Kamila  | kd22222@auca.kg
+ Malika  | ma33333@auca.kg
+(3 rows)
+
+
+university=# SELECT name, email FROM students LIMIT 2;
+  name   |      email
+---------+-----------------
+ Cholpon | sc11111@auca.kg
+ Kamila  | kd22222@auca.kg
+(2 rows)
+
+
+university=# --comments here
+university=# /*comments
+university*# multi-line*/
+university-#
