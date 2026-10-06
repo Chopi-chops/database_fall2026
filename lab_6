@@ -1,0 +1,90 @@
+postgres=# \c university
+You are now connected to database "university" as user "postgres".
+university=# \d
+               List of relations
+ Schema |      Name       |   Type   |  Owner
+--------+-----------------+----------+----------
+ public | students        | table    | postgres
+ public | students_id_seq | sequence | postgres
+(2 rows)
+
+
+university=# \d students
+                                    Table "public.students"
+ Column  |          Type          | Collation | Nullable |               Default
+---------+------------------------+-----------+----------+--------------------------------------
+ id      | integer                |           | not null | nextval('students_id_seq'::regclass)
+ name    | character varying(100) |           |          |
+ email   | character varying(100) |           |          |
+ faculty | character varying(70)  |           |          |
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (id)
+
+
+university=# DROP TABLE IF EXISTS students;
+DROP TABLE
+university=# \d
+Did not find any relations.
+university=# CREATE TABLE students (
+university(# id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# email VARCHAR(100) UNIQUE NOT NULL,
+university(# faculty VARCHAR(50));
+CREATE TABLE
+university=# ALTER TABLE students
+university-# ADD COLUMN date_of_birth DATE;
+ALTER TABLE
+university=# ALTER TABLE students
+university-# ALTER COLUMN first_name TYPE TEXT;
+ALTER TABLE
+university=# ALTER TABLE students
+university-# ADD CONSTRAINT unique_email UNIQUE (email);
+ALTER TABLE
+university=# SELECT * FROM students;
+ id | first_name | last_name | email | faculty | date_of_birth
+----+------------+-----------+-------+---------+---------------
+(0 rows)
+
+
+university=# ALTER TABLE students
+university-# DROP COLUMN date_of_birth;
+ALTER TABLE
+university=# ALTER TABLE students
+university-# RENAME COLUMN email TO email_address;
+ALTER TABLE
+university=# ALTER TABLE students
+university-# RENAME TO auca_students;
+ALTER TABLE
+university=# SELECT * FROM auca_students;
+ id | first_name | last_name | email_address | faculty
+----+------------+-----------+---------------+---------
+(0 rows)
+
+
+university=# INSERT INTO auca_students
+university-# (first_name, last_name, email_address, faculty)
+university-# VALUES ('Chop', 'Sul', 'sc11111@auca.kg', 'SFW');
+INSERT 0 1
+university=# SELECT *FROM auca_students;
+ id | first_name | last_name |  email_address  | faculty
+----+------------+-----------+-----------------+---------
+  1 | Chop       | Sul       | sc11111@auca.kg | SFW
+(1 row)
+
+
+university=# CREATE TEMP TABLE temp_students (
+university(# name VARCHAR(100) NOT NULL,
+university(# faculty VARCHAR(50),
+university(# gpa NUMERIC(3, 2) CHECK (gpa >= 0 AND gpa<= 4));
+CREATE TABLE
+university=# INSERT INTO temp_students (name, faculty, gpa) VALUES ('Cholpon', 'AMI', 3.8);
+INSERT 0 1
+university=# SELECT * FROM temp_students;
+  name   | faculty | gpa
+---------+---------+------
+ Cholpon | AMI     | 3.80
+(1 row)
+
+
+university=#
