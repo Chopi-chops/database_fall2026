@@ -1,0 +1,77 @@
+postgres=# \l
+                                                                  List of databases
+    Name    |  Owner   | Encoding | Locale Provider |         Collate         |          Ctype          | Locale | ICU Rules |   Access privileges
+------------+----------+----------+-----------------+-------------------------+-------------------------+--------+-----------+-----------------------
+ books      | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ coffee     | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ postgres   | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+ template0  | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           | =c/postgres          +
+            |          |          |                 |                         |                         |        |           | postgres=CTc/postgres
+ template1  | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           | =c/postgres          +
+            |          |          |                 |                         |                         |        |           | postgres=CTc/postgres
+ university | postgres | UTF8     | libc            | Russian_Kyrgyzstan.1251 | Russian_Kyrgyzstan.1251 |        |           |
+(6 rows)
+
+
+postgres=# \c university
+You are now connected to database "university" as user "postgres".
+university=# \dt
+              List of tables
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | auca_students | table | postgres
+(1 row)
+
+
+university=# --column-level constraint
+university=# CREATE TABLE students (
+university(# student_id INTEGER PRIMARY KEY,
+university(# name VARCHAR(100),
+university(# email VARCHAR(150));
+CREATE TABLE
+university=# DROP TABLE students;
+DROP TABLE
+university=# --table-level constrait
+university=# CREATE TABLE students (
+university(# student_id INTEGER,
+university(# name VARCHAR(100),
+university(# email VARCHAR(150),
+university(# PRIMARY KEY (student_id));
+CREATE TABLE
+university=# DROP TABLE students;
+DROP TABLE
+university=# --named constraint
+university=# CREATE TABLE students (
+university(# student_id INTEGER,
+university(# name VARCHAR(100),
+university(# email VARCHAR(150),
+university(# CONSTRAINT pk_students PRIMARY KEY (student_id));
+CREATE TABLE
+university=# DROP TABLE students;
+DROP TABLE
+university=# --adding primary key to existing table
+university=# CREATE TABLE students (
+university(# student_id INTEGER,
+university(# name VARCHAR(100),
+university(# email VARCHAR(150));
+CREATE TABLE
+university=# ALTER TABLE students ADD CONSTRAINT pk_students PRIMARY KEY (student_id);
+ALTER TABLE
+university=# \dt
+              List of tables
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | auca_students | table | postgres
+ public | students      | table | postgres
+(2 rows)
+
+
+university=# \d students
+                       Table "public.students"
+   Column   |          Type          | Collation | Nullable | Default
+------------+------------------------+-----------+----------+---------
+ student_id | integer                |           | not null |
+ name       | character varying(100) |           |          |
+ email      | character varying(150) |           |          |
+Indexes:
+    "pk_students" PRIMARY KEY, btree (student_id)
