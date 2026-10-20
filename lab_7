@@ -75,3 +75,16 @@ university=# \d students
  email      | character varying(150) |           |          |
 Indexes:
     "pk_students" PRIMARY KEY, btree (student_id)
+
+university=# --primary key constraints, duplicate key value                                        ^
+university=# INSERT INTO students VALUES
+university-# (1, 'Alice in wonderland', 'alice@auca.kg'),
+university-# (1, 'Jack Sparrow', 'jack@auca.kg');
+ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "pk_students"
+DETAIL:  Ключ "(student_id)=(1)" уже существует.
+university=# --primary key cannot be NULL
+university=# INSERT INTO students VALUES
+university-# (NULL, 'Alice in wonderland', 'alice@auca.kg'),
+university-# (NULL, 'Jack Sparrow', 'jack@auca.kg');
+ОШИБКА:  значение NULL в столбце "student_id" отношения "students" нарушает ограничение NOT NULL
+DETAIL:  Ошибочная строка содержит (null, Alice in wonderland, alice@auca.kg).
