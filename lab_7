@@ -88,3 +88,36 @@ university-# (NULL, 'Alice in wonderland', 'alice@auca.kg'),
 university-# (NULL, 'Jack Sparrow', 'jack@auca.kg');
 ОШИБКА:  значение NULL в столбце "student_id" отношения "students" нарушает ограничение NOT NULL
 DETAIL:  Ошибочная строка содержит (null, Alice in wonderland, alice@auca.kg).
+university=# --single primary key with AUTO_INCREMENT equivalent SERIAL
+university=# DROP TABLE students;
+DROP TABLE
+university=# CREATE TABLE students (
+university(# student_id SERIAL PRIMARY KEY,
+university(# name VARCHAR(100) NOT NULL,
+university(# email VARCHAR(150) UNIQUE,
+university(# faculty VARCHAR(50));
+CREATE TABLE
+university=# INSERT INTO students (name, email, faculty) VALUES
+university-# ('Alice', 'alice@auca.kg', 'PSY'),
+university-# ('Jack', 'jack@auca.kg', 'BA');
+INSERT 0 2
+university=# \d students
+                                          Table "public.students"
+   Column   |          Type          | Collation | Nullable |                   Default         
+------------+------------------------+-----------+----------+----------------------------------------------
+ student_id | integer                |           | not null | nextval('students_student_id_seq'::regclass)
+ name       | character varying(100) |           | not null |
+ email      | character varying(150) |           |          |
+ faculty    | character varying(50)  |           |          |
+Indexes:
+    "students_pkey1" PRIMARY KEY, btree (student_id)
+    "students_email_key1" UNIQUE CONSTRAINT, btree (email)
+
+
+university=# SELECT * FROM students;
+ student_id | name  |     email     | faculty
+------------+-------+---------------+---------
+          1 | Alice | alice@auca.kg | PSY
+          2 | Jack  | jack@auca.kg  | BA
+(2 rows)
+
