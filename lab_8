@@ -75,3 +75,127 @@ university=# DELETE FROM departments WHERE dept_id = 1;
 ОШИБКА:  UPDATE или DELETE в таблице "departments" нарушает ограничение внешнего ключа "fk_employee_department" таблицы "employees"
 DETAIL:  На ключ (dept_id)=(1) всё ещё есть ссылки в таблице "employees".
 university=#
+university=#  INSERT INTO departments (dept_name, location) VALUES
+university-# ('BA', '202'), ('ECO', '105'), ('ICP', '304');
+INSERT 0 3
+university=#  INSERT INTO employees (first_name, last_name, dept_id) VALUES
+university-# ('Malika', 'Abdu', 2), ('Aidana', 'Boss', 3), ('Lilia', 'Lul', 4), ('Arlen', 'Mal', 5);
+INSERT 0 4
+university=# SELECT * FROM departments;
+ dept_id | dept_name | location
+---------+-----------+----------
+       1 | SFW       | 409
+       2 | AMI       | 203
+       3 | BA        | 202
+       4 | ECO       | 105
+       5 | ICP       | 304
+(5 rows)
+
+
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Cholpon    | Sul       |       1
+      2 | Malika     | Abdu      |       2
+      3 | Aidana     | Boss      |       3
+      4 | Lilia      | Lul       |       4
+      5 | Arlen      | Mal       |       5
+(5 rows)
+
+
+university=# --CASCADE options (ON DELETE, ON UPDATE)
+university=# --ON DELETE Options:
+university=# --CASCADE - Automatically delete child records when parent is deleted
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON DELETE CASCADE;
+ALTER TABLE
+university=# DELETE FROM departments WHERE dept_id = 5;
+DELETE 1
+university=# --when department is deleted all employees in it are also deleted
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Cholpon    | Sul       |       1
+      2 | Malika     | Abdu      |       2
+      3 | Aidana     | Boss      |       3
+      4 | Lilia      | Lul       |       4
+(4 rows)
+
+
+university=# --SET NULL - Set foreign key to NULL when parent is deleted
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON DELETE SET NULL;
+ALTER TABLE
+university=# DELETE FROM departments WHERE dept_id = 4;
+DELETE 1
+university=# -- when department is deleted employees' dept_id becomes NULL
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Cholpon    | Sul       |       1
+      2 | Malika     | Abdu      |       2
+      3 | Aidana     | Boss      |       3
+      4 | Lilia      | Lul       |
+(4 rows)
+
+
+university=# -- SET DEFAULT - Set foreign key to its default value when parent is deleted
+university=# INSERT INTO departments (dept_id, dept_name, location) VALUES
+university-# (0, 'N/A', 'N/A');
+INSERT 0 1
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON DELETE SET DEFAULT;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ALTER COLUMN dept_id SET DEFAULT 0;
+ALTER TABLE
+university=# DELETE FROM departments WHERE dept_id = 3;
+DELETE 1
+university=# SELECT * FROM departments;
+ dept_id | dept_name | location
+---------+-----------+----------
+       1 | SFW       | 409
+       2 | AMI       | 203
+       0 | N/A       | N/A
+(3 rows)
+
+
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Cholpon    | Sul       |       1
+      2 | Malika     | Abdu      |       2
+      4 | Lilia      | Lul       |
+      3 | Aidana     | Boss      |       0
+(4 rows)
+
+
+university=# -- RESTRICT (default) - Prevent deletion of parent if child records exist
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON DELETE RESTRICT;
+ALTER TABLE
+university=# DELETE FROM departments WHERE dept_id = 1;
+ОШИБКА:  UPDATE или DELETE в таблице "departments" нарушает ограничение RESTRICT внешнего ключа "fk_employee_department" таблицы "employees"
+DETAIL:  На ключ (dept_id)=(1) есть ссылки в таблице "employees".
+university=# -- Fail if employees exist in the department
+university=#
