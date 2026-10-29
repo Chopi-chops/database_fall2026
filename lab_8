@@ -241,3 +241,51 @@ university-# FOREIGN KEY (dept_id)
 university-# REFERENCES departments(dept_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE
 university=#
+university=# DROP TABLE employees;
+DROP TABLE
+university=# DROP TABLE departments;
+DROP TABLE
+university=# -- One-to-many relationships
+university=# -- parent table
+university=# CREATE TABLE departments (
+university(# dept_id SERIAL PRIMARY KEY,
+university(# dept_name VARCHAR(100) NOT NULL,
+university(# manager_name VARCHAR(100),
+university(# budget DECIMAL(10,2));
+CREATE TABLE
+university=# -- child table
+university=# CREATE TABLE employees (
+university(# emp_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# position VARCHAR(100),
+university(# salary DECIMAL(10,2),
+university(# hire_date DATE DEFAULT CURRENT_DATE,
+university(# dept_id INTEGER NOT NULL,
+university(# FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE RESTRICT);
+CREATE TABLE
+university=# INSERT INTO departments (dept_name, manager_name, budget) VALUES
+university-# ('SFW', 'Alice Wonder', 500000.00),
+university-# ('HR', 'Bob Dob', 300000.00);
+INSERT 0 2
+university=# INSERT INTO employees (first_name, last_name, position, salary, dept_id)
+university-# VALUES
+university-# ('John', 'Smith', 'SFW', 75000.00, 1),
+university-# ('Muller', 'Doe', 'Senior', 85000.00, 1),
+university-# ('Mike', 'Tayson', 'DevOps', 85050.00, 1),
+university-# ('Sara', 'Phan', 'Marketing Specialist', 35050.00, 2);
+INSERT 0 4
+university=# SELECT d.dept_name, e.first_name, e.last_name, e.position
+university-# FROM departments d
+university-# JOIN employees e ON d.dept_id = e.dept_id
+university-# ORDER BY d.dept_name, e.last_name;
+ dept_name | first_name | last_name |       position
+-----------+------------+-----------+----------------------
+ HR        | Sara       | Phan      | Marketing Specialist
+ SFW       | Muller     | Doe       | Senior
+ SFW       | John       | Smith     | SFW
+ SFW       | Mike       | Tayson    | DevOps
+(4 rows)
+
+
+university=# -- Many-to-many relationships
