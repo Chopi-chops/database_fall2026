@@ -165,3 +165,86 @@ university-# ON s.department_id = d.department_id;
 (1 row)
 
 
+university=# -- Designing a Library Management System
+university=# -- Entities: Book, Author, Member, Loan
+university=# -- Relationships:
+university=# -- Author writes book (many_to_many)
+university=# -- Member borrows book through Loan (one_to_many)
+university=# CREATE TABLE authors (
+university(# author_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# birth_date DATE);
+CREATE TABLE
+university=# CREATE TABLE books (
+university(# book_id SERIAL PRIMARY KEY,
+university(# title VARCHAR(200) NOT NULL,
+university(# isbn VARCHAR(13) UNIQUE,
+university(# publication_year INTEGER,
+university(# available_copies INTEGER DEFAULT 1);
+CREATE TABLE
+university=# CREATE TABLE book_authors (
+university(# book_id INTEGER,
+university(# author_id INTEGER,
+university(# PRIMARY KEY (book_id, author_id),
+university(# FOREIGN KEY (book_id) REFERENCES books(book_id),
+university(# FOREIGN KEY (author_id) REFERENCES authors(author_id));
+CREATE TABLE
+university=# CREATE TABLE members (
+university(# member_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# email VARCHAR(100) UNIQUE NOT NULL,
+university(# phone VARCHAR(15),
+university(# membership_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+university=# CREATE TABLE loans (
+university(# loan_id SERIAL PRIMARY KEY,
+university(# member_id INTEGER NOT NULL,
+university(# book_id INTEGER NOT NULL,
+university(# loan_date DATE DEFAULT CURRENT_DATE,
+university(# due_date DATE NOT NULL,
+university(# return_date DATE,
+university(# late_fee DECIMAL(10,2) DEFAULT 0.00,
+university(# FOREIGN KEY (member_id) REFERENCES members(member_id),
+university(# FOREIGN KEY (book_id) REFERENCES books(book_id));
+CREATE TABLE
+university=# INSERT INTO authors (first_name, last_name, birth_date) VALUES
+university-# ('Duma', 'Alexandr', '1802-07-24'),
+university-# ('Jack', 'London', '1876-01-12');
+INSERT 0 2
+university=# INSERT INTO books
+university-# (title, isbn, publication_year, available_copies) VALUES
+university-# ('Martin Eden', '9780486817125', 1909, 5),
+university-# ('The Count of Monte Cristo', '9785041135249', 1846, 6);
+INSERT 0 2
+university=# INSERT INTO book_authors (book_id, author_id) VALUES
+university-# (1, 1), (2, 2);
+INSERT 0 2
+university=# INSERT INTO members (first_name, last_name, email, phone) VALUES
+university-# ('Rainbow', 'Dash', 'rd@cool.kg', '111111'),
+university-# ('Twilight', 'Sparkle', 'ts@cool.kg', '222222');
+INSERT 0 2
+university=# INSERT INTO loans
+university-# (member_id, book_id, loan_date, due_date, return_date, late_fee) VALUES
+university-# (1, 1, '2026-10-29', '2026-11-07', '2026-11-05', 0.00),
+university-# (2, 2, '2026-10-30', '2026-11-08', '2026-11-06', 0.00);
+INSERT 0 2
+university=# SELECT
+university-# m.first_name || ' ' || m.last_name AS member_name,
+university-# b.title,
+university-# l.loan_date,
+university-# l.return_date,
+university-# l.due_date
+university-# FROM loans AS l
+university-# JOIN members AS m
+university-# ON l.member_id = m.member_id
+university-# JOIN books AS b
+university-# ON l.book_id = b.book_id
+university-# ORDER BY m.member_id;
+   member_name    |           title           | loan_date  | return_date |  due_date 
+------------------+---------------------------+------------+-------------+------------
+ Rainbow Dash     | Martin Eden               | 2026-10-29 | 2026-11-05  | 2026-11-07 Twilight Sparkle | The Count of Monte Cristo | 2026-10-30 | 2026-11-06  | 2026-11-08(2 rows)
+
+
+university=#
