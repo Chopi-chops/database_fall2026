@@ -1,0 +1,141 @@
+university=# -- First Normal Form
+university=# -- (1NF)
+university=# -- Each column contains atomic values
+university=# -- no repeating groups or arrays
+university=# -- each row is unique
+university=# -- Violating 1NF:
+university=# -- multiple phone numbers in 1 column
+university=# CREATE TABLE student_bad (
+university(# student_id INT PRIMARY KEY,
+university(# name VARCHAR(100),
+university(# phone_numbers TEXT);
+CREATE TABLE
+university=# INSERT INTO student_bad (student_id, name, phone_numbers) VALUES
+university-# (1, 'Apple Jack', '123456, 234567');
+INSERT 0 1
+university=# SELECT * FROM student_bad;
+ student_id |    name    | phone_numbers
+------------+------------+----------------
+          1 | Apple Jack | 123456, 234567
+(1 row)
+
+
+university=# -- Following 1NF:
+university=# -- Good - atomic values
+university=# CREATE TABLE student_1nf (
+university(# student_id INT PRIMARY KEY,
+university(# name VARCHAR(100));
+CREATE TABLE
+university=# CREATE TABLE student_phones (
+university(# student_id INT,
+university(# phone_number VARCHAR(20),
+university(# phone_type VARCHAR(20),
+university(# PRIMARY KEY (student_id, phone_number),
+university(# FOREIGN KEY (student_id) REFERENCES student_1nf(student_id));
+CREATE TABLE
+university=# INSERT INTO student_1nf (student_id, name) VALUES
+university-# (1, 'Apple Jack');
+INSERT 0 1
+university=# INSERT INTO student_phones (student_id, phone_number, phone_type) VALUES
+university-# (1, '123456', 'Home'),
+university-# (1, '234567', 'Work');
+INSERT 0 2
+university=# SELECT * FROM student_1nf;
+ student_id |    name
+------------+------------
+          1 | Apple Jack
+(1 row)
+
+
+university=# SELECT * FROM student_phones;
+ student_id | phone_number | phone_type
+------------+--------------+------------
+          1 | 123456       | Home
+          1 | 234567       | Work
+(2 rows)
+
+
+university=# -- Second Normal Form
+university=# -- must be in 1nf
+university=# -- no partial dependencies
+university=# -- Violating 2nf:
+university=# CREATE TABLE enrollments_bad (
+university(# student_id INT,
+university(# course_id INT,
+university(# course_name VARCHAR(100),
+university(# grade CHAR(2),
+university(# PRIMARY KEY (student_id, course_id));
+CREATE TABLE
+university=# INSERT INTO enrollments_bad (student_id, course_id, course_name, grade) VALUES
+university-# (1, 424, 'Databases', 'A'),
+university-# (2, 424, 'Databases', 'B');
+INSERT 0 2
+university=# SELECT * FROM enrollments_bad;
+ student_id | course_id | course_name | grade
+------------+-----------+-------------+-------
+          1 |       424 | Databases   | A
+          2 |       424 | Databases   | B
+(2 rows)
+
+
+university=# -- Following 2NF:
+university=# -- good- separate tables
+university=# CREATE TABLE courses_2nf (
+university(# course_id INT PRIMARY KEY,
+university(# course_name VARCHAR(100),
+university(# credits INT);
+CREATE TABLE
+university=# CREATE TABLE enrollments_2nf (
+university(# student_id INT,
+university(# course_id INT,
+university(# grade CHAR(2),
+university(# PRIMARY KEY (student_id, course_id),
+university(# FOREIGN KEY (student_id) REFERENCES student_1nf(student_id),
+university(# FOREIGN KEY (course_id) REFERENCES courses_2nf(course_id));
+CREATE TABLE
+university=# INSERT INTO courses_2nf (
+university(# course_id, course_name, credits) VALUES (424, 'Database', 6);
+INSERT 0 1
+university=# INSERT INTO enrollments_2nf (student_id, course_id, grade) VALUES
+university-# (1, 424, 'A');
+INSERT 0 1
+university=# SELECT* FROM courses_2nf;
+ course_id | course_name | credits
+-----------+-------------+---------
+       424 | Database    |       6
+(1 row)
+
+
+university=# SELECT * FROM enrollments_2nf;
+ student_id | course_id | grade
+------------+-----------+-------
+          1 |       424 | A
+(1 row)
+
+
+university=# -- Third Normal Form
+university=# -- must be in 2nf, no transitive dependencies(non-key on other non-key)
+university=# -- Violating 3NF:
+university=# CREATE TABLE students_bad (
+university(# student_id INT PRIMARY KEY,
+university(# name VARCHAR(100),
+university(# department_id INT,
+university(# department_name VARCHAR(100));
+CREATE TABLE
+university=# INSERT INTO students_bad (student_id, name, department_id, department_name) VALUES
+university-# (1, 'Apple Jack', 4, 'ECO');
+INSERT 0 1
+university=# SELECT * FROM students_bad;
+ student_id |    name    | department_id | department_name
+------------+------------+---------------+-----------------
+          1 | Apple Jack |             4 | ECO
+(1 row)
+
+
+university=# -- Following 3NF:
+university=# -- good - separate department information
+university=# CREATE TABLE departments_3nf (
+university(# department_id INT PRIMARY KEY,
+university(# department_name VARCHAR(100),
+university(# department_head VARCHAR(100));
+CREATE TABLE
