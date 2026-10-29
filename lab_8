@@ -1,0 +1,77 @@
+university=# --Creating foreign key constraints
+university=# --Method 1: Inline constraint during table creation
+university=# --First create the parent table
+university=# CREATE TABLE departments (
+university(# dept_id SERIAL PRIMARY KEY,
+university(# dept_name VARCHAR(100) NOT NULL,
+university(# location VARCHAR(100));
+CREATE TABLE
+university=# --create the child table with foreign key
+university=# CREATE TABLE employees (
+university(# emp_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# dept_id INTEGER REFERENCES departments(dept_id));
+CREATE TABLE
+university=#
+university=# DROP TABLE employees;
+DROP TABLE
+university=# --Method 2: Table- level constraint during creation
+university=# CREATE TABLE employees (
+university(# emp_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50),
+university(# last_name VARCHAR(50) NOT NULL,
+university(# dept_id INTEGER,
+university(# FOREIGN KEY (dept_id) REFERENCES departments(dept_id));
+CREATE TABLE
+university=# DROP TABLE employees;
+DROP TABLE
+university=# --Method 3: Adding constraint to existing table
+university=# CREATE TABLE employees (
+university(# emp_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50),
+university(# last_name VARCHAR(50) NOT NULL,
+university(# dept_id INTEGER);
+CREATE TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id) REFERENCES departments(dept_id);
+ALTER TABLE
+university=# DROP TABLE employees;
+DROP TABLE
+university=# --Method 4: Named constraint during table creation
+university=# CREATE TABLE employees (
+university(# emp_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# dept_id INTEGER,
+university(# CONSTRAINT fk_employee_department
+university(# FOREIGN KEY (dept_id) REFERENCES departments(dept_id));
+CREATE TABLE
+university=# --REFERENTIAL INTEGRITY
+university=# --Insert sample data into parents table
+university=# INSERT INTO departments (dept_name, location) VALUES
+university-# ('SFW', '409'),
+university-# ('AMI', '203');
+INSERT 0 2
+university=# --Insert will work - references existing department
+university=# INSERT INTO employees (first_name, last_name, dept_id) VALUES
+university-# ('Cholpon', 'Sul', 1);
+INSERT 0 1
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | Cholpon    | Sul       |       1
+(1 row)
+
+
+university=# --this insert will FAIL - references non-existent department
+university=# INSERT INTO employees (first_name, last_name, dept_id) VALUES
+university-# ('Karim', 'Ali', 3);
+ОШИБКА:  INSERT или UPDATE в таблице "employees" нарушает ограничение внешнего ключа "fk_employee_department"
+DETAIL:  Ключ (dept_id)=(3) отсутствует в таблице "departments".
+university=# --this DELETE will FAIL if there are employees in this department
+university=# DELETE FROM departments WHERE dept_id = 1;
+ОШИБКА:  UPDATE или DELETE в таблице "departments" нарушает ограничение внешнего ключа "fk_employee_department" таблицы "employees"
+DETAIL:  На ключ (dept_id)=(1) всё ещё есть ссылки в таблице "employees".
+university=#
