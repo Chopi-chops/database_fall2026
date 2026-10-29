@@ -199,3 +199,45 @@ university=# DELETE FROM departments WHERE dept_id = 1;
 DETAIL:  На ключ (dept_id)=(1) есть ссылки в таблице "employees".
 university=# -- Fail if employees exist in the department
 university=#
+university=# -- ON UPDATE OPTIONS:
+university=# -- UPDATE FOREIGN KEY values when parent key changes
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON UPDATE CASCADE;
+ALTER TABLE
+university=# UPDATE departments SET dept_id = 100 WHERE dept_id = 1;
+UPDATE 1
+university=# -- when department id changes employees records are auto updated
+university=# SELECT * FROM departments;
+ dept_id | dept_name | location
+---------+-----------+----------
+       2 | AMI       | 203
+       0 | N/A       | N/A
+     100 | SFW       | 409
+(3 rows)
+
+
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      2 | Malika     | Abdu      |       2
+      4 | Lilia      | Lul       |
+      3 | Aidana     | Boss      |       0
+      1 | Cholpon    | Sul       |     100
+(4 rows)
+
+
+university=# -- Combined CASCADE options:
+university=# ALTER TABLE employees
+university-# DROP CONSTRAINT fk_employee_department;
+ALTER TABLE
+university=# ALTER TABLE employees
+university-# ADD CONSTRAINT fk_employee_department
+university-# FOREIGN KEY (dept_id)
+university-# REFERENCES departments(dept_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE
+university=#
