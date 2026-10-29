@@ -289,3 +289,113 @@ university-# ORDER BY d.dept_name, e.last_name;
 
 
 university=# -- Many-to-many relationships
+university=# CREATE TABLE students (
+university(# student_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50) NOT NULL,
+university(# last_name VARCHAR(50) NOT NULL,
+university(# email VARCHAR(100) UNIQUE,
+university(# enrollment_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+university=# CREATE TABLE courses (
+university(# course_id SERIAL PRIMARY KEY,
+university(# course_code VARCHAR(10) UNIQUE NOT NULL,
+university(# course_name VARCHAR(100) NOT NULL,
+university(# credits INTEGER NOT NULL,
+university(# instructor VARCHAR(100));
+CREATE TABLE
+university=# -- Junction table for many-to-many relation
+university=# CREATE TABLE student_enrollments (
+university(# enrollment_id SERIAL PRIMARY KEY,
+university(# student_id INTEGER NOT NULL,
+university(# course_id INTEGER NOT NULL,
+university(# enrollment_date DATE DEFAULT CURRENT_DATE,
+university(# grade CHAR(2),
+university(# FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+university(# FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+university(# UNIQUE(student_id, course_id));
+CREATE TABLE
+university=# INSERT INTO students (first_name, last_name, email) VALUES
+university-# ('Amina', 'Mashalieva', 'am@auca.kg'),
+university-# ('Bob', 'Nedoros', 'bn@auca.kg'),
+university-# ('Clara', 'Pogovori', 'cp@auca.kg');
+INSERT 0 3
+university=# INSERT INTO courses (course_code, course_name, credits, instructor) VALUES
+university-# ('COM-122', 'Intro to Programming', 6, 'Toksaitov'),
+university-# ('ART-111', 'Komuz', 3, 'Satylganov'),
+university-# ('AMI-142', 'ODE', 6, 'Imanaliev');
+INSERT 0 3
+university=# SELECT * FROM students;
+ student_id | first_name | last_name  |   email    | enrollment_date
+------------+------------+------------+------------+-----------------
+          1 | Amina      | Mashalieva | am@auca.kg | 2026-10-29
+          2 | Bob        | Nedoros    | bn@auca.kg | 2026-10-29
+          3 | Clara      | Pogovori   | cp@auca.kg | 2026-10-29
+(3 rows)
+
+
+university=# SELECT * FROM courses;
+ course_id | course_code |     course_name      | credits | instructor
+-----------+-------------+----------------------+---------+------------
+         1 | COM-122     | Intro to Programming |       6 | Toksaitov
+         2 | ART-111     | Komuz                |       3 | Satylganov
+         3 | AMI-142     | ODE                  |       6 | Imanaliev
+(3 rows)
+
+
+university=# INSERT INTO student_enrollments (student_id, course_id, grade) VALUES
+university-# (1, 1, 'A'), (2, 1, 'A'), (3, 1, 'B'), (1, 2, 'A+'), (2, 2, 'B-'), (3, 3, 'A-'),
+university-# (1, 3, 'A'), (2, 3, 'A'), (3, 2, 'B');
+INSERT 0 9
+university=# SELECT
+university-# s.first_name || ' ' || s.last_name AS student_name,
+university-# c.course_code,
+university-# c.course_name,
+university-# se.grade,
+university-# se.enrollment_date
+university-# FROM students s
+university-# JOIN student_enrollments se ON s.student_id = se.student_id
+university-# JOIN courses c ON se.course_id = c.course_id
+university-# ORDER BY s.last_name, c.course_code;
+   student_name   | course_code |     course_name      | grade | enrollment_date
+------------------+-------------+----------------------+-------+-----------------
+ Amina Mashalieva | AMI-142     | ODE                  | A     | 2026-10-29
+ Amina Mashalieva | ART-111     | Komuz                | A+    | 2026-10-29
+ Amina Mashalieva | COM-122     | Intro to Programming | A     | 2026-10-29
+ Bob Nedoros      | AMI-142     | ODE                  | A     | 2026-10-29
+ Bob Nedoros      | ART-111     | Komuz                | B-    | 2026-10-29
+ Bob Nedoros      | COM-122     | Intro to Programming | A     | 2026-10-29
+ Clara Pogovori   | AMI-142     | ODE                  | A-    | 2026-10-29
+ Clara Pogovori   | ART-111     | Komuz                | B     | 2026-10-29
+ Clara Pogovori   | COM-122     | Intro to Programming | B     | 2026-10-29
+(9 rows)
+
+
+university=# -- find all students in a specific course
+university=# SELECT s.first_name, s.last_name, se.grade
+university-# FROM students s
+university-# JOIN student_enrollments se ON s.student_id = se.student_id
+university-# JOIN courses c ON se.course_id = c.course_id
+university-# WHERE c.course_code = 'COM-122';
+ first_name | last_name  | grade
+------------+------------+-------
+ Amina      | Mashalieva | A
+ Bob        | Nedoros    | A
+ Clara      | Pogovori   | B
+(3 rows)
+
+
+university=# -- find all courses for a specific student
+university=# SELECT c.course_code, c.course_name, c.credits, se.grade
+university-# FROM courses c
+university-# JOIN student_enrollments se ON c.course_id = se.course_id
+university-# JOIN students s ON se.student_id = s.student_id
+university-# WHERE s.email = 'am@auca.kg';
+ course_code |     course_name      | credits | grade
+-------------+----------------------+---------+-------
+ COM-122     | Intro to Programming |       6 | A
+ ART-111     | Komuz                |       3 | A+
+ AMI-142     | ODE                  |       6 | A
+(3 rows)
+
+
+university=#
