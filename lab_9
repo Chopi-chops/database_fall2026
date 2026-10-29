@@ -139,3 +139,29 @@ university(# department_id INT PRIMARY KEY,
 university(# department_name VARCHAR(100),
 university(# department_head VARCHAR(100));
 CREATE TABLE
+university=# CREATE TABLE students_3nf (
+university(# student_id INT PRIMARY KEY,
+university(# name VARCHAR(100),
+university(# department_id INT,
+university(# FOREIGN KEY (department_id) REFERENCES departments_3nf(department_id));
+CREATE TABLE
+university=# INSERT INTO departments_3nf (department_id, department_name, department_head) VALUES
+university-# (424, 'Database', 'Apple Jack');
+INSERT 0 1
+university=# INSERT INTO students_3nf (student_id, name, department_id) VALUES
+university-# (1, 'Rarity', 424);
+INSERT 0 1
+university=# SELECT
+university-# s.student_id,
+university-# s.name,
+university-# d.department_name,
+university-# d.department_head
+university-# FROM students_3nf AS s
+university-# JOIN departments_3nf AS d
+university-# ON s.department_id = d.department_id;
+ student_id |  name  | department_name | department_head
+------------+--------+-----------------+-----------------
+          1 | Rarity | Database        | Apple Jack
+(1 row)
+
+
