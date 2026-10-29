@@ -16,3 +16,21 @@ I commit to:
 - Adhering to the university's code of conduct and course policies.
 
 ---
+
+## Repository Content
+- 'lab_3': Basic psql Commands
+- 'lab_4': First SQL Query
+- 'lab_5': Databases
+- 'lab_6': Tables, Data Types and Constraints
+- 'lab_7': Primary Keys
+- 'lab_8': Foreign Keys and Relationships
+- 'lab_9': Database Design Basics
+- 'lab_10': Viewing Database and Table Structure
+- 'lab_11': Basic Data Operations
+- 'lab_12': Querying Data
+- 'lab_13': Aggregate Functions
+- 'lab_14': Joining Tables
+- 'lab_15': Advanced Querying
+- 'lab_16': Transactions and ACID Properties
+- 'lab_17': Data Import/Export and Backup
+- 'Oracle Academy': Certificate of Completion
