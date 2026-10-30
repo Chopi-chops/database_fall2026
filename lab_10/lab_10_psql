@@ -1,0 +1,42 @@
+postgres=# \c university
+You are now connected to database "university" as user "postgres".
+university=# \dt
+                 List of tables
+ Schema |        Name         | Type  |  Owner
+--------+---------------------+-------+----------
+ public | authors             | table | postgres
+ public | book_authors        | table | postgres
+ public | books               | table | postgres
+ public | courses             | table | postgres
+ public | courses_2nf         | table | postgres
+ public | customers           | table | postgres
+ public | departments         | table | postgres
+ public | departments_3nf     | table | postgres
+ public | employees           | table | postgres
+ public | enrollments_2nf     | table | postgres
+ public | enrollments_bad     | table | postgres
+ public | loans               | table | postgres
+ public | members             | table | postgres
+ public | orders              | table | postgres
+ public | student_1nf         | table | postgres
+ public | student_bad         | table | postgres
+ public | student_enrollments | table | postgres
+ public | student_phones      | table | postgres
+ public | students            | table | postgres
+ public | students_3nf        | table | postgres
+ public | students_bad        | table | postgres
+ public | transactions        | table | postgres
+(22 rows)
+
+
+university=# \d book_authors
+             Table "public.book_authors"
+  Column   |  Type   | Collation | Nullable | Default
+-----------+---------+-----------+----------+---------
+ book_id   | integer |           | not null |
+ author_id | integer |           | not null |
+Indexes:
+    "book_authors_pkey" PRIMARY KEY, btree (book_id, author_id)
+Foreign-key constraints:
+    "book_authors_author_id_fkey" FOREIGN KEY (author_id) REFERENCES authors(author_id)
+    "book_authors_book_id_fkey" FOREIGN KEY (book_id) REFERENCES books(book_id)
