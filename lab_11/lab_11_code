@@ -19,3 +19,53 @@ university=# -- Delete statements
 university=# DELETE FROM students_lab11
 university-# WHERE birth_date < '2003-07-01';
 DELETE 1
+university=# -- Bulk operations
+university=# \copy students_lab11 TO 'C:/Users/sulta/Desktop/study/Database/students.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 2
+university=# CREATE TABLE students_lab11_copy (
+university(# student_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50),
+university(# last_name VARCHAR(50),
+university(# birth_date DATE);
+CREATE TABLE
+university=# \copy students_lab11_copy FROM 'C:/Users/sulta/Desktop/study/Database/students.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 2
+university=# SELECT * FROM students_lab11_copy;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          3 | Flutter    | Shy       | 2003-07-05
+          2 | Rainbow    | Dash      | 2003-10-30
+(2 rows)
+
+
+university=# SELECT * FROM students_lab11;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          3 | Flutter    | Shy       | 2003-07-05
+          2 | Rainbow    | Dash      | 2003-10-30
+(2 rows)
+
+
+university=# -- Bulk Update
+university=# UPDATE students_lab11_copy
+university-# SET last_name = 'Sul'
+university-# WHERE last_name IN ('Dash', 'Shy');
+UPDATE 2
+university=# --Bulk Delete
+university=# DELETE FROM students_lab11
+university-# WHERE student_id IN (3); -- multiple (2, 3, ...)
+DELETE 1
+university=# SELECT * FROM students_lab11;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          2 | Rainbow    | Dash      | 2003-10-30
+(1 row)
+
+
+university=# SELECT * FROM students_lab11_copy;
+ student_id | first_name | last_name | birth_date
+------------+------------+-----------+------------
+          3 | Flutter    | Sul       | 2003-07-05
+          2 | Rainbow    | Sul       | 2003-10-30
+(2 rows)
+
