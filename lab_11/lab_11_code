@@ -1,0 +1,21 @@
+university=# CREATE TABLE students_lab11 (
+university(# student_id SERIAL PRIMARY KEY,
+university(# first_name VARCHAR(50),
+university(# last_name VARCHAR(50),
+university(# birth_date DATE);
+CREATE TABLE
+university=# -- Insert statements (add new rows into table)
+university=# INSERT INTO students_lab11 (first_name, last_name, birth_date)
+university-# VALUES ('Pinky', 'Pie', '2003-06-01'),
+university-# ('Rainbow', 'Dash', '2003-09-04'),
+university-# ('Flutter', 'Shy', '2003-07-05');
+INSERT 0 3
+university=# -- Update statements
+university=# UPDATE students_lab11
+university-# SET birth_date = '2003-10-30'
+university-# WHERE first_name = 'Rainbow' AND last_name = 'Dash';
+UPDATE 1
+university=# -- Delete statements
+university=# DELETE FROM students_lab11
+university-# WHERE birth_date < '2003-07-01';
+DELETE 1
