@@ -103,3 +103,41 @@ shop-# CROSS JOIN orders o;
  Flutter Shy      |      333
 (9 rows)
 
+
+shop=# \c university
+You are now connected to database "university" as user "postgres".
+university=# -- Advanced Join Techniques
+university=# -- Multiple table joins
+university=# SELECT b.title, m.first_name, l.loan_id
+university-# FROM books b
+university-# INNER JOIN loans l ON l.book_id = l.book_id
+university-# INNER JOIN members m ON m.member_id = l.member_id;
+           title           | first_name | loan_id
+---------------------------+------------+---------
+ Martin Eden               | Rainbow    |       1
+ The Count of Monte Cristo | Rainbow    |       1
+ Martin Eden               | Twilight   |       2
+ The Count of Monte Cristo | Twilight   |       2
+(4 rows)
+
+
+university=# -- SELF JOINS
+university=# SELECT e1.first_name AS employee, e2.first_name AS manager
+university-# FROM employees e1
+university-# LEFT JOIN employees e2 ON e1.dept_id = e2.emp_id;
+ employee | manager
+----------+---------
+ John     | John
+ Muller   | John
+ Mike     | John
+ Sara     | Muller
+ Chop     | Mike
+ Appa     | Mike
+ Aang     | Sara
+ Toph     | Chop
+ Katara   | Appa
+(9 rows)
+
+
+university=# -- JOIN with Conditions
+
