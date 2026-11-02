@@ -75,3 +75,87 @@ shop-# WHERE total_orders >= 1;
 shop=# -- Recursive Queries
 shop=# \c university
 You are now connected to database "university" as user "postgres".
+university=# WITH RECURSIVE org_chart AS (
+university(# SELECT emp_id, first_name, dept_id
+university(# FROM employees
+university(# WHERE dept_id = 3
+university(# UNION ALL
+university(#  SELECT e.emp_id, e.first_name, e.dept_id
+university(# FROM employees e
+university(# INNER JOIN org_chart oc ON e.dept_id = oc.emp_id)
+university-# SELECT * FROM org_chart;
+ emp_id | first_name | dept_id
+--------+------------+---------
+      5 | Chop       |       3
+      6 | Appa       |       3
+      8 | Toph       |       5
+      9 | Katara     |       6
+(4 rows)
+
+
+university=# -- Set Operations
+university=# --UNION
+university=# SELECT * FROM students;
+ student_id | first_name | last_name  |   email    | enrollment_date
+------------+------------+------------+------------+-----------------
+          1 | Amina      | Mashalieva | am@auca.kg | 2026-10-29
+          2 | Bob        | Nedoros    | bn@auca.kg | 2026-10-29
+          3 | Clara      | Pogovori   | cp@auca.kg | 2026-10-29
+(3 rows)
+
+
+university=# SELECT email FROM employees WHERE email IS NOT NULL
+university-# UNION
+university-# SELECT email FROM students WHERE email IS NOT NULL;
+     email
+---------------
+ am@auca.kg
+ cp@auca.kg
+ ko@gmail.com
+ tb@gmail.com
+ bn@auca.kg
+ sc4@gmail.com
+ aa5@gmail.com
+ aa4@gmail.com
+(8 rows)
+
+
+university=# -- EXPECT
+university=# SELECT first_name, salary FROM employees WHERE salary > 70000
+university-# EXCEPT
+university-# SELECT first_name, salary FROM employees WHERE email IS NOT NULL;
+ first_name |  salary
+------------+----------
+ Muller     | 85000.00
+ John       | 75000.00
+ Mike       | 85050.00
+(3 rows)
+
+
+university=# -- INTERSECT
+university=# SELECT first_name AS person_name FROM employees
+university-# INTERSECT
+university-# SELECT dept_name AS person_name
+university-# FROM departments;
+ person_name
+-------------
+(0 rows)
+
+
+university=# SELECT first_name AS person_name
+university-# FROM employees
+university-# WHERE salary > 70000
+university-# INTERSECT
+university-# SELECT first_name AS person_name
+university-# FROM employees
+university-# WHERE age < 23;
+ person_name
+-------------
+ Aang
+ Mike
+ Muller
+ John
+(4 rows)
+
+
+university=# -- Window Functions and Partioning
