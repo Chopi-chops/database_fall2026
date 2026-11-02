@@ -1,0 +1,5 @@
+emp_id,first_name,last_name,position,salary,hire_date,dept_id,email,age
+3,Mike,Tayson,DevOps,85050.00,2026-10-29,1,,18
+7,Aang,Avatar,Director,80000.00,2025-06-21,4,aa4@gmail.com,22
+2,Muller,Doe,Senior,92000.00,2026-10-29,1,,18
+1,John,Smith,Senior Developer,99000.00,2026-10-29,1,john.updated@gmail.com,18
