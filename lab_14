@@ -1,0 +1,105 @@
+shop=# CREATE TABLE customers (
+shop(# customer_id SERIAL PRIMARY KEY,
+shop(# name VARCHAR(100),
+shop(# email VARCHAR(100));
+CREATE TABLE
+shop=# CREATE TABLE orders (
+shop(# order_id SERIAL PRIMARY KEY,
+shop(# customer_id INTEGER REFERENCES customers(customer_id),
+shop(# order_date DATE,
+shop(# total_amount DECIMAL(10,2));
+CREATE TABLE
+shop=# INSERT INTO customers(name, email) VALUES
+shop-# ('Twilight Sparkle', 'ts7@gmail.com'),
+shop-# ('Rainbow Dash', 'rd777@gmail.com'),
+shop-# ('Flutter Shy', 'fs5@gmail.com');
+INSERT 0 3
+shop=# INSERT INTO orders (order_id, order_date, total_amount) VALUES
+shop-# (111, '2026-01-23', 2500.00),
+shop-# (222, '2026-02-15', 12500.00),
+shop-# (333, '2026-03-07', 32500.00);
+INSERT 0 3
+shop=# -- 1.Inner Join
+shop=# SELECT c.name, c.email, o.order_date, o.total_amount
+shop-# FROM customers c
+shop-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount
+------+-------+------------+--------------
+(0 rows)
+
+
+shop=# SELECT * FROM customers;
+ customer_id |       name       |      email
+-------------+------------------+-----------------
+           1 | Twilight Sparkle | ts7@gmail.com
+           2 | Rainbow Dash     | rd777@gmail.com
+           3 | Flutter Shy      | fs5@gmail.com
+(3 rows)
+
+
+shop=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+      111 |             | 2026-01-23 |      2500.00
+      222 |             | 2026-02-15 |     12500.00
+      333 |             | 2026-03-07 |     32500.00
+(3 rows)
+
+
+shop=# -- 2.LEFT JOIN
+shop=# SELECT c.name, c.email, o.order_date, o.total_amount
+shop-# FROM customers c
+shop-# LEFT JOIN orders o ON c.customer_id = o.customer_id;
+       name       |      email      | order_date | total_amount
+------------------+-----------------+------------+--------------
+ Rainbow Dash     | rd777@gmail.com |            |
+ Twilight Sparkle | ts7@gmail.com   |            |
+ Flutter Shy      | fs5@gmail.com   |            |
+(3 rows)
+
+
+shop=# -- 3.RIGHT JOIN
+HINT:  Возможно, предполагалась ссылка на столбец "o.order_date".
+shop=# SELECT c.name, c.email, o.order_date, o.total_amount
+shop-# FROM customers c
+shop-# RIGHT JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount
+------+-------+------------+--------------
+      |       | 2026-01-23 |      2500.00
+      |       | 2026-02-15 |     12500.00
+      |       | 2026-03-07 |     32500.00
+(3 rows)
+
+
+shop=# -- 4. FULL OUTER JOIN
+shop=# SELECT c.name, c.email, o.order_date, o.total_amount
+shop-# FROM customers c
+shop-# FULL OUTER JOIN orders o ON c.customer_id = o.customer_id;
+       name       |      email      | order_date | total_amount
+------------------+-----------------+------------+--------------
+                  |                 | 2026-01-23 |      2500.00
+                  |                 | 2026-02-15 |     12500.00
+                  |                 | 2026-03-07 |     32500.00
+ Rainbow Dash     | rd777@gmail.com |            |
+ Twilight Sparkle | ts7@gmail.com   |            |
+ Flutter Shy      | fs5@gmail.com   |            |
+(6 rows)
+
+
+shop=# -- 5. CROSS JOIN
+shop=# SELECT c.name, o.order_id
+shop-# FROM customers c
+shop-# CROSS JOIN orders o;
+       name       | order_id
+------------------+----------
+ Twilight Sparkle |      111
+ Rainbow Dash     |      111
+ Flutter Shy      |      111
+ Twilight Sparkle |      222
+ Rainbow Dash     |      222
+ Flutter Shy      |      222
+ Twilight Sparkle |      333
+ Rainbow Dash     |      333
+ Flutter Shy      |      333
+(9 rows)
+
