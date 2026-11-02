@@ -1,0 +1,115 @@
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |         email          | age
+--------+------------+-----------+----------------------+----------+------------+---------+------------------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |                        |  18
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com          |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com          |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com          |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com           |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com           |  25
+      4 | Sara       | Phan      | Marketing Specialist | 39050.00 | 2026-10-29 |       2 |                        |  20
+      2 | Muller     | Doe       | Senior               | 92000.00 | 2026-10-29 |       1 |                        |  18
+      1 | John       | Smith     | Senior Developer     | 99000.00 | 2026-10-29 |       1 | john.updated@gmail.com |  18
+(9 rows)
+
+
+university=# SELECT * FROM departments;
+ dept_id |       dept_name       |  manager_name  |  budget
+---------+-----------------------+----------------+-----------
+       1 | SFW                   | Alice Wonder   | 500000.00
+       2 | HR                    | Bob Dob        | 300000.00
+       3 | System Administration | Lalisa Manoban | 400000.00
+       4 | Development           | Rose Pack      | 600000.00
+       5 | DevOps                | Jennie Solo    | 700000.00
+       6 | Cybersecurity         | Jichu Rabbit   | 800000.00
+(6 rows)
+
+
+
+university=# -- COPY command
+university=# \copy employees TO 'C:\Users\sulta\Desktop\study\Database\employees.csv' WITH CSV HEADER;
+COPY 9
+university=# CREATE TABLE employees_copy AS
+university-# SELECT * FROM employees
+university-# WITH NO DATA;
+CREATE TABLE AS
+university=# \copy employees_copy FROM 'C:\Users\sulta\Desktop\study\Database\employees.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 9
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |         email          | age
+--------+------------+-----------+----------------------+----------+------------+---------+------------------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |                        |  18
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com          |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com          |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com          |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com           |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com           |  25
+      4 | Sara       | Phan      | Marketing Specialist | 39050.00 | 2026-10-29 |       2 |                        |  20
+      2 | Muller     | Doe       | Senior               | 92000.00 | 2026-10-29 |       1 |                        |  18
+      1 | John       | Smith     | Senior Developer     | 99000.00 | 2026-10-29 |       1 | john.updated@gmail.com |  18
+(9 rows)
+
+
+university=# SELECT * FROM employees_copy;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |         email          | age
+--------+------------+-----------+----------------------+----------+------------+---------+------------------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |                        |  18
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com          |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com          |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com          |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com           |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com           |  25
+      4 | Sara       | Phan      | Marketing Specialist | 39050.00 | 2026-10-29 |       2 |                        |  20
+      2 | Muller     | Doe       | Senior               | 92000.00 | 2026-10-29 |       1 |                        |  18
+      1 | John       | Smith     | Senior Developer     | 99000.00 | 2026-10-29 |       1 | john.updated@gmail.com |  18
+(9 rows)
+
+
+university=# -- Advanced Copy Options
+university=# \copy employees TO 'C:\Users\sulta\Desktop\study\Database\employees_pipe.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER '|');
+COPY 9
+university=# \copy (SELECT first_name, last_name, position, salary FROM employees) TO 'C:\Users\sulta\Desktop\study\Database\employees_salary.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 9
+university=# \copy (SELECT * FROM employees WHERE salary > 75000) TO 'C:\Users\sulta\Desktop\study\Database\high_salary_employees.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 4
+university=# CREATE TABLE employees_contacts AS
+university-# SELECT first_name, last_name, email
+university-# FROM employees
+university-# WITH NO DATA;
+CREATE TABLE AS
+university=# \copy employees_contacts FROM 'C:\Users\sulta\Desktop\study\Database\employees_contacts.csv' WITH (FORMAT CSV, HEADER TRUE);
+C:/Users/sulta/Desktop/study/Database/employees_contacts.csv: No such file or directory
+university=# \copy (SELECT first_name, last_name, email FROM employees) TO 'C:\Users\sulta\Desktop\study\Database\employees_contacts.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 9
+university=# SELECT * FROM employees_contacts;
+ first_name | last_name | email
+------------+-----------+-------
+(0 rows)
+
+
+university=# \copy employees_contacts FROM 'C:\Users\sulta\Desktop\study\Database\employees_contacts.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 9
+university=# SELECT * FROM employees_contacts;
+ first_name | last_name |         email
+------------+-----------+------------------------
+ Mike       | Tayson    |
+ Chop       | Zero      | sc4@gmail.com
+ Appa       | Air       | aa5@gmail.com
+ Aang       | Avatar    | aa4@gmail.com
+ Toph       | Beiphong  | tb@gmail.com
+ Katara     | Onelove   | ko@gmail.com
+ Sara       | Phan      |
+ Muller     | Doe       |
+ John       | Smith     | john.updated@gmail.com
+(9 rows)
+
+
+university=# \copy (SELECT first_name, last_name, position, salary FROM employees) TO 'C:\Users\sulta\Desktop\study\Database\employees_salary.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 9
+university=#
+university=# \copy (SELECT * FROM employees WHERE salary > 75000) TO 'C:\Users\sulta\Desktop\study\Database\high_salary_employees.csv' WITH (FORMAT CSV, HEADER TRUE);
+COPY 4
+university=# \copy employees_copy FROM 'C:\Users\sulta\Desktop\study\Database\employees.csv' WITH (FORMAT CSV, HEADER TRUE, ENCODING 'UTF8');
+COPY 9
+
+
