@@ -235,3 +235,202 @@ university-# FROM employees WHERE emp_id = 1;
 
 
 university=#
+university=# -- ISOLATION LEVEL
+university=# BEGIN;
+BEGIN
+university=*# SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SET
+university=*# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior               | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW                  | 90000.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=*# COMMIT;
+COMMIT
+university=# -- SAVEPOINTS
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# SAVEPOINT after_salary_update;
+SAVEPOINT
+university=*# UPDATE employees
+university-*# SET position = 'Senior Developer'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# ROLLBACK TO SAVEPOINT after_salary_update;
+ROLLBACK
+university=*# UPDATE employees
+university-*# SET email = 'john.smith@gmail.com'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# SAVEPOINT sp1;
+SAVEPOINT
+university=*# UPDATE employees
+university-*# SET salary = salary + 2000
+university-*# WHERE emp_id = 2;
+UPDATE 1
+university=*# SAVEPOINT sp2;
+SAVEPOINT
+university=*# UPDATE employees
+university-*# SET salary = salary + 3000
+university-*# WHERE emp_id = 3;
+UPDATE 1
+university=*# ROLLBACK TO SAVEPOINT sp2;
+ROLLBACK
+university=*# UPDATE employees
+university-*# SET salary = salary + 4000
+university-*# WHERE emp_id = 4;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# SAVEPOINT process_start;
+SAVEPOINT
+university=*# UPDATE employees
+university-*# SET salary = salary + 2000
+university-*# WHERE emp_id = 2;
+UPDATE 1
+university=*# RELEASE SAVEPOINT process_start;
+RELEASE
+university=*# COMMIT;
+COMMIT
+university=# -- Transactions best practices
+university=# -- keep transactions short and focused
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET position = 'Senior Developer'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# -- Handle errors properly
+university=# DO $$
+university$# DECLARE
+university$#  current_salary DECIMAL;
+university$# BEGIN
+university$#  SELECT salary
+university$#  INTO current_salary
+university$#  FROM employees
+university$#  WHERE emp_id = 1;
+university$#  IF current_salary IS NULL OR current_salary < 70000 THEN
+university$# RAISE EXCEPTION 'Salary is too low or employee does not exist';
+university$# END IF;
+university$#  UPDATE employees
+university$# SET salary = salary + 1000
+university$#  WHERE emp_id = 1;
+university$#  RAISE NOTICE 'Salary updated successfully';
+university$# EXCEPTION
+university$#  WHEN OTHERS THEN
+university$# RAISE NOTICE 'Transaction failed: %', SQLERRM;
+university$# END $$;
+ЗАМЕЧАНИЕ:  Salary updated successfully
+DO
+university=# -- Appropriate isolation levels
+university=# BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN
+university=*# SELECT * FROM employees
+university-*# WHERE dept_id = 1;
+ emp_id | first_name | last_name |     position     |  salary  | hire_date  | dept_id |        email         | age
+--------+------------+-----------+------------------+----------+------------+---------+----------------------+-----
+      3 | Mike       | Tayson    | DevOps           | 85050.00 | 2026-10-29 |       1 |                      |  18
+      2 | Muller     | Doe       | Senior           | 92000.00 | 2026-10-29 |       1 |                      |  18
+      1 | John       | Smith     | Senior Developer | 96000.00 | 2026-10-29 |       1 | john.smith@gmail.com |  18
+(3 rows)
+
+
+university=*# COMMIT;
+COMMIT
+university=# -- Savepoints for complex operations
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 1000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# SAVEPOINT before_position;
+SAVEPOINT
+university=*# UPDATE employees
+university-*# SET position = 'Team Leader'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# ROLLBACK TO SAVEPOINT before_position;
+ROLLBACK
+university=*# UPDATE employees
+university-*# SET email = 'updated@gmail.com'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# -- Monitor transactions locks and deadlocks
+university=# SELECT
+university-# blocked_locks.pid AS blocked_pid,
+university-# blocked_activity.usename AS blocked_user,
+university-# blocking_locks.pid AS blocking_pid,
+university-# blocking_activity.usename AS blocking_user,
+university-# blocked_activity.query AS blocked_statement
+university-# FROM pg_catalog.pg_locks blocked_locks
+university-# JOIN pg_catalog.pg_stat_activity blocked_activity
+university-# ON blocked_activity.pid = blocked_locks.pid
+university-# JOIN pg_catalog.pg_locks blocking_locks
+university-# ON blocking_locks.locktype = blocked_locks.locktype
+university-# WHERE NOT blocked_locks.granted;
+ОШИБКА:  таблица "blocking_activity" отсутствует в предложении FROM
+LINE 5: blocking_activity.usename AS blocking_user,
+        ^
+university=# -- Use explicit trans for multiple operations
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 2000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET position = 'Senior Developer'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET email = 'john.updated@gmail.com'
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=#
