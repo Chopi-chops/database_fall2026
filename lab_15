@@ -1,0 +1,77 @@
+university=# SELECT * FROM employees
+university-# ;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      1 | John       | Smith     | SFW                  | 75000.00 | 2026-10-29 |       1 |               |  18
+      2 | Muller     | Doe       | Senior               | 85000.00 | 2026-10-29 |       1 |               |  18
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+(9 rows)
+
+
+university=# SELECT first_name, last_name, salary
+university-# FROM employees
+university-# WHERE salary > (
+university(# SELECT AVG(salary)
+university(# FROM employees);
+ first_name | last_name |  salary
+------------+-----------+----------
+ John       | Smith     | 75000.00
+ Muller     | Doe       | 85000.00
+ Mike       | Tayson    | 85050.00
+ Aang       | Avatar    | 80000.00
+ Toph       | Beiphong  | 75000.00
+ Katara     | Onelove   | 75000.00
+(6 rows)
+
+
+university=# -- Subqueries
+university=#
+university=#
+university=# -- Common Table Expressions(CTEa)
+university=# \c shop
+You are now connected to database "shop" as user "postgres".
+shop=# WITH customer_order_counts AS (
+shop(# SELECT customer_id, COUNT(order_id) AS total_orders
+shop(# FROM orders
+shop(# GROUP BY customer_id)
+shop-# SELECT customer_id, total_orders
+shop-# FROM customer_order_counts
+shop-# WHERE total_orders > 1;
+ customer_id | total_orders
+-------------+--------------
+(0 rows)
+
+
+shop=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+      333 |           1 | 2026-03-07 |     32500.00
+      222 |           2 | 2026-02-15 |     12500.00
+      111 |           3 | 2026-01-23 |      2500.00
+(3 rows)
+
+
+shop=# WITH customer_order_counts AS (
+shop(# SELECT customer_id, COUNT(order_id) AS total_orders
+shop(# FROM orders
+shop(# GROUP BY customer_id)
+shop-# SELECT customer_id, total_orders
+shop-# FROM customer_order_counts
+shop-# WHERE total_orders >= 1;
+ customer_id | total_orders
+-------------+--------------
+           1 |            1
+           2 |            1
+           3 |            1
+(3 rows)
+
+
+shop=# -- Recursive Queries
+shop=# \c university
+You are now connected to database "university" as user "postgres".
