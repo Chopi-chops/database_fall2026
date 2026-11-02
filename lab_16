@@ -1,0 +1,237 @@
+university=# -- BEGIN - Start a new transaction
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary - 100
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      2 | Muller     | Doe       | Senior               | 85000.00 | 2026-10-29 |       1 |               |  18
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      1 | John       | Smith     | SFW                  | 74900.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=# -- COMMIT - Save all changes made in the transaction
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 5000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET salary = salary + 3000
+university-*# WHERE emp_id = 2;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      1 | John       | Smith     | SFW                  | 79900.00 | 2026-10-29 |       1 |               |  18
+      2 | Muller     | Doe       | Senior               | 88000.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=# -- ROLLBACK - Undo all changes made in the transaction
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary - 10000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET salary = salary - 10000
+university-*# WHERE emp_id = 2;
+UPDATE 1
+university=*# ROLLBACK;
+ROLLBACK
+university=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      1 | John       | Smith     | SFW                  | 79900.00 | 2026-10-29 |       1 |               |  18
+      2 | Muller     | Doe       | Senior               | 88000.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=# -- with condition
+university=# BEGIN;
+BEGIN
+university=*# SELECT salary
+university-*# FROM employees
+university-*# WHERE emp_id = 1;
+  salary
+----------
+ 79900.00
+(1 row)
+
+
+university=*# UPDATE employees
+university-*# SET salary = salary + 5000
+university-*# WHERE emp_id = 1
+university-*# AND salary >= 70000;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# -- ACID PROPERTIES
+university=# -- Atomicity
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 5000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# UPDATE employees
+university-*# SET salary = salary + 5000
+university-*# WHERE emp_id = 2;
+UPDATE 1
+university=*# ROLLBACK;
+ROLLBACK
+university=# -- CONSISTENCY
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = salary + 2000
+university-*# WHERE emp_id = 1
+university-*# AND salary > 0;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# SELECT * FROM employees WHERE salary <= 0;
+ emp_id | first_name | last_name | position | salary | hire_date | dept_id | email | age
+--------+------------+-----------+----------+--------+-----------+---------+-------+-----
+(0 rows)
+
+
+university=# -- ISOLATION
+university=# BEGIN TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+BEGIN
+university=*# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior               | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW                  | 86900.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=*# COMMIT;
+COMMIT
+university=# BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN
+university=*# SELECT * FROM employees
+university-*# WHERE salary > 70000;
+ emp_id | first_name | last_name | position |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps   | 85050.00 | 2026-10-29 |       1 |               |  18
+      7 | Aang       | Avatar    | Director | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead     | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior   | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW      | 86900.00 | 2026-10-29 |       1 |               |  18
+(6 rows)
+
+
+university=*# COMMIT;
+COMMIT
+university=# BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN
+university=*# SELECT * FROM employees
+university-*# WHERE salary > 70000;
+ emp_id | first_name | last_name | position |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps   | 85050.00 | 2026-10-29 |       1 |               |  18
+      7 | Aang       | Avatar    | Director | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead     | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior   | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW      | 86900.00 | 2026-10-29 |       1 |               |  18
+(6 rows)
+
+
+university=*# SELECT * FROM employees
+university-*# WHERE salary > 70000;
+ emp_id | first_name | last_name | position |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps   | 85050.00 | 2026-10-29 |       1 |               |  18
+      7 | Aang       | Avatar    | Director | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead     | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior   | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW      | 86900.00 | 2026-10-29 |       1 |               |  18
+(6 rows)
+
+
+university=*# COMMIT;
+COMMIT
+university=# BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+university=*# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+----------------------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |               |  18
+      4 | Sara       | Phan      | Marketing Specialist | 35050.00 | 2026-10-29 |       2 |               |  20
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com  |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com  |  25
+      2 | Muller     | Doe       | Senior               | 88000.00 | 2026-10-29 |       1 |               |  18
+      1 | John       | Smith     | SFW                  | 86900.00 | 2026-10-29 |       1 |               |  18
+(9 rows)
+
+
+university=*# UPDATE employees
+university-*# SET salary = salary * 1.05
+university-*# WHERE dept_id = 1;
+UPDATE 3
+university=*# ROLLBACK;
+ROLLBACK
+university=# -- DURABILITY
+university=# BEGIN;
+BEGIN
+university=*# UPDATE employees
+university-*# SET salary = 90000
+university-*# WHERE emp_id = 1;
+UPDATE 1
+university=*# COMMIT;
+COMMIT
+university=# SELECT emp_id, first_name, salary
+university-# FROM employees WHERE emp_id = 1;
+ emp_id | first_name |  salary
+--------+------------+----------
+      1 | John       | 90000.00
+(1 row)
+
+
+university=#
