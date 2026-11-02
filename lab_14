@@ -140,4 +140,150 @@ university-# LEFT JOIN employees e2 ON e1.dept_id = e2.emp_id;
 
 
 university=# -- JOIN with Conditions
+shop=# UPDATE orders
+shop-# SET customer_id = 1
+shop-# WHERE order_id = 333;
+UPDATE 1
+shop=# UPDATE orders
+shop-# SET customer_id = 2
+shop-# WHERE order_id = 222;
+UPDATE 1
+shop=# UPDATE orders
+shop-# SET customer_id = 3
+shop-# WHERE order_id = 111;
+UPDATE 1
+shop=# SELECT * FROM orders;
+ order_id | customer_id | order_date | total_amount
+----------+-------------+------------+--------------
+      333 |           1 | 2026-03-07 |     32500.00
+      222 |           2 | 2026-02-15 |     12500.00
+      111 |           3 | 2026-01-23 |      2500.00
+(3 rows)
+
+
+shop=# SELECT * FROM customers;
+ customer_id |       name       |      email
+-------------+------------------+-----------------
+           1 | Twilight Sparkle | ts7@gmail.com
+           2 | Rainbow Dash     | rd777@gmail.com
+           3 | Flutter Shy      | fs5@gmail.com
+(3 rows)
+
+
+shop=# SELECT c.name, o.order_date, o.total_amount
+shop-# FROM customers c
+shop-# INNER JOIN orders o ON c.customer_id = o.customer_id
+shop-# WHERE o.order_date >= '2026-02-15'
+shop-# AND o.total_amount > 2500;
+       name       | order_date | total_amount
+------------------+------------+--------------
+ Twilight Sparkle | 2026-03-07 |     32500.00
+ Rainbow Dash     | 2026-02-15 |     12500.00
+(2 rows)
+
+
+shop=# \c university
+You are now connected to database "university" as user "postgres".
+university=# --One-to-Many relationships
+university=# SELECT a.author_id, b.title, b.publication_year
+university-# FROM book_authors a
+university-# INNER JOIN books b ON a.book_id = b.book_id
+university-# ORDER BY a.author_id, b.publication_year;
+ author_id |           title           | publication_year
+-----------+---------------------------+------------------
+         1 | Martin Eden               |             1909
+         2 | The Count of Monte Cristo |             1846
+(2 rows)
+
+
+university=# -- Many-to-Many Relationships
+university=# SELECT * FROM students;
+ student_id | first_name | last_name  |   email    | enrollment_date
+------------+------------+------------+------------+-----------------
+          1 | Amina      | Mashalieva | am@auca.kg | 2026-10-29
+          2 | Bob        | Nedoros    | bn@auca.kg | 2026-10-29
+          3 | Clara      | Pogovori   | cp@auca.kg | 2026-10-29
+(3 rows)
+
+
+university=# \d courses
+                                          Table "public.courses"
+   Column    |          Type          | Collation | Nullable |                  Default          
+-------------+------------------------+-----------+----------+--------------------------------------------
+ course_id   | integer                |           | not null | nextval('courses_course_id_seq'::regclass)
+ course_code | character varying(10)  |           | not null |
+ course_name | character varying(100) |           | not null |
+ credits     | integer                |           | not null |
+ instructor  | character varying(100) |           |          |
+Indexes:
+    "courses_pkey" PRIMARY KEY, btree (course_id)
+    "courses_course_code_key" UNIQUE CONSTRAINT, btree (course_code)
+Referenced by:
+    TABLE "student_enrollments" CONSTRAINT "student_enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+
+
+university=# \d student_enrollments;
+                                         Table "public.student_enrollments"
+     Column      |     Type     | Collation | Nullable |                          Default        
+-----------------+--------------+-----------+----------+------------------------------------------------------------
+ enrollment_id   | integer      |           | not null | nextval('student_enrollments_enrollment_id_seq'::regclass)
+ student_id      | integer      |           | not null |
+ course_id       | integer      |           | not null |
+ enrollment_date | date         |           |          | CURRENT_DATE
+ grade           | character(2) |           |          |
+Indexes:
+    "student_enrollments_pkey" PRIMARY KEY, btree (enrollment_id)
+    "student_enrollments_student_id_course_id_key" UNIQUE CONSTRAINT, btree (student_id, course_id)
+Foreign-key constraints:
+    "student_enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+    "student_enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+
+
+university=# SELECT * FROM courses;
+ course_id | course_code |     course_name      | credits | instructor
+-----------+-------------+----------------------+---------+------------
+         1 | COM-122     | Intro to Programming |       6 | Toksaitov
+         2 | ART-111     | Komuz                |       3 | Satylganov
+         3 | AMI-142     | ODE                  |       6 | Imanaliev
+(3 rows)
+
+
+university=# SELECT * FROM student_enrollments;
+ enrollment_id | student_id | course_id | enrollment_date | grade
+---------------+------------+-----------+-----------------+-------
+             1 |          1 |         1 | 2026-10-29      | A
+             2 |          2 |         1 | 2026-10-29      | A
+             3 |          3 |         1 | 2026-10-29      | B
+             4 |          1 |         2 | 2026-10-29      | A+
+             5 |          2 |         2 | 2026-10-29      | B-
+             6 |          3 |         3 | 2026-10-29      | A-
+             7 |          1 |         3 | 2026-10-29      | A
+             8 |          2 |         3 | 2026-10-29      | A
+             9 |          3 |         2 | 2026-10-29      | B
+(9 rows)
+
+
+university=# SELECT s.first_name, c.course_name, e.enrollment_date, e.grade
+university-# FROM students s
+university-# INNER JOIN student_enrollments e ON s.student_id = e.student_id
+university-# INNER JOIN courses c ON e.course_id = c.course_id
+university-# WHERE e.grade IS NOT NULL
+university-# ORDER BY s.first_name, c.course_name;
+ first_name |     course_name      | enrollment_date | grade
+------------+----------------------+-----------------+-------
+ Amina      | Intro to Programming | 2026-10-29      | A
+ Amina      | Komuz                | 2026-10-29      | A+
+ Amina      | ODE                  | 2026-10-29      | A
+ Bob        | Intro to Programming | 2026-10-29      | A
+ Bob        | Komuz                | 2026-10-29      | B-
+ Bob        | ODE                  | 2026-10-29      | A
+ Clara      | Intro to Programming | 2026-10-29      | B
+ Clara      | Komuz                | 2026-10-29      | B
+ Clara      | ODE                  | 2026-10-29      | A-
+(9 rows)
+
+
+university=# \c shop
+You are now connected to database "shop" as user "postgres".
+shop=#
 
