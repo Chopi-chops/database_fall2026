@@ -113,3 +113,375 @@ university=# \copy employees_copy FROM 'C:\Users\sulta\Desktop\study\Database\em
 COPY 9
 
 
+-- CMD -- pg_dump and pg_restore --
+-- SQL Backup
+pg_dump -h localhost -U postgres -d university -f "C:\Users\sulta\Desktop\study\Database\university_backup.sql"
+-- compressed backup
+pg_dump -h localhost -U postgres -d university -Fc -f "C:\Users\sulta\Desktop\study\Database\university_backup.dump"
+-- Backup specific tables only
+pg_dump -h localhost -U postgres -d university -t employees -t departments -f "C:\Users\sulta\Desktop\study\Database\tables_backup.sql"
+-- Checking backup integrity
+pg_restore --list "C:\Users\sulta\Desktop\study\Database\university_backup.dump"
+;
+; Archive created at 2026-11-02 23:06:04
+;     dbname: university
+;     TOC Entries: 148
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6
+;     Dumped by pg_dump version: 18.6
+;
+;
+; Selected TOC Entries:
+;
+247; 1259 16819 TABLE public authors postgres
+246; 1259 16818 SEQUENCE public authors_author_id_seq postgres
+5254; 0 0 SEQUENCE OWNED BY public authors_author_id_seq postgres
+250; 1259 16840 TABLE public book_authors postgres
+249; 1259 16829 TABLE public books postgres
+248; 1259 16828 SEQUENCE public books_book_id_seq postgres
+5255; 0 0 SEQUENCE OWNED BY public books_book_id_seq postgres
+234; 1259 16703 TABLE public courses postgres
+241; 1259 16771 TABLE public courses_2nf postgres
+233; 1259 16702 SEQUENCE public courses_course_id_seq postgres
+5256; 0 0 SEQUENCE OWNED BY public courses_course_id_seq postgres
+226; 1259 16518 TABLE public customers postgres
+225; 1259 16517 SEQUENCE public customers_customer_id_seq postgres
+228; 1259 16664 TABLE public departments postgres
+244; 1259 16800 TABLE public departments_3nf postgres
+227; 1259 16663 SEQUENCE public departments_dept_id_seq postgres
+5257; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq postgres
+230; 1259 16673 TABLE public employees postgres
+260; 1259 16951 TABLE public employees_contacts postgres
+259; 1259 16948 TABLE public employees_copy postgres
+229; 1259 16672 SEQUENCE public employees_emp_id_seq postgres
+5258; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq postgres
+242; 1259 16777 TABLE public enrollments_2nf postgres
+240; 1259 16764 TABLE public enrollments_bad postgres
+254; 1259 16872 TABLE public loans postgres
+253; 1259 16871 SEQUENCE public loans_loan_id_seq postgres
+5259; 0 0 SEQUENCE OWNED BY public loans_loan_id_seq postgres
+252; 1259 16858 TABLE public members postgres
+251; 1259 16857 SEQUENCE public members_member_id_seq postgres
+5260; 0 0 SEQUENCE OWNED BY public members_member_id_seq postgres
+224; 1259 16510 TABLE public orders postgres
+223; 1259 16509 SEQUENCE public orders_order_id_seq postgres
+238; 1259 16746 TABLE public student_1nf postgres
+237; 1259 16738 TABLE public student_bad postgres
+236; 1259 16716 TABLE public student_enrollments postgres
+235; 1259 16715 SEQUENCE public student_enrollments_enrollment_id_seq postgres
+5261; 0 0 SEQUENCE OWNED BY public student_enrollments_enrollment_id_seq postgres
+239; 1259 16752 TABLE public student_phones postgres
+232; 1259 16690 TABLE public students postgres
+245; 1259 16806 TABLE public students_3nf postgres
+243; 1259 16794 TABLE public students_bad postgres
+256; 1259 16896 TABLE public students_lab11 postgres
+258; 1259 16904 TABLE public students_lab11_copy postgres
+257; 1259 16903 SEQUENCE public students_lab11_copy_student_id_seq postgres
+5262; 0 0 SEQUENCE OWNED BY public students_lab11_copy_student_id_seq postgres
+255; 1259 16895 SEQUENCE public students_lab11_student_id_seq postgres
+5263; 0 0 SEQUENCE OWNED BY public students_lab11_student_id_seq postgres
+231; 1259 16689 SEQUENCE public students_student_id_seq postgres
+5264; 0 0 SEQUENCE OWNED BY public students_student_id_seq postgres
+222; 1259 16501 TABLE public transactions postgres
+221; 1259 16500 SEQUENCE public transactions_transaction_id_seq postgres
+5265; 0 0 SEQUENCE OWNED BY public transactions_transaction_id_seq postgres
+4982; 2604 16822 DEFAULT public authors author_id postgres
+4983; 2604 16832 DEFAULT public books book_id postgres
+4979; 2604 16706 DEFAULT public courses course_id postgres
+4974; 2604 16667 DEFAULT public departments dept_id postgres
+4975; 2604 16676 DEFAULT public employees emp_id postgres
+4987; 2604 16875 DEFAULT public loans loan_id postgres
+4985; 2604 16861 DEFAULT public members member_id postgres
+4980; 2604 16719 DEFAULT public student_enrollments enrollment_id postgres
+4977; 2604 16693 DEFAULT public students student_id postgres
+4990; 2604 16899 DEFAULT public students_lab11 student_id postgres
+4991; 2604 16907 DEFAULT public students_lab11_copy student_id postgres
+4971; 2604 16504 DEFAULT public transactions transaction_id postgres
+5234; 0 16819 TABLE DATA public authors postgres
+5237; 0 16840 TABLE DATA public book_authors postgres
+5236; 0 16829 TABLE DATA public books postgres
+5221; 0 16703 TABLE DATA public courses postgres
+5228; 0 16771 TABLE DATA public courses_2nf postgres
+5213; 0 16518 TABLE DATA public customers postgres
+5215; 0 16664 TABLE DATA public departments postgres
+5231; 0 16800 TABLE DATA public departments_3nf postgres
+5217; 0 16673 TABLE DATA public employees postgres
+5247; 0 16951 TABLE DATA public employees_contacts postgres
+5246; 0 16948 TABLE DATA public employees_copy postgres
+5229; 0 16777 TABLE DATA public enrollments_2nf postgres
+5227; 0 16764 TABLE DATA public enrollments_bad postgres
+5241; 0 16872 TABLE DATA public loans postgres
+5239; 0 16858 TABLE DATA public members postgres
+5211; 0 16510 TABLE DATA public orders postgres
+5225; 0 16746 TABLE DATA public student_1nf postgres
+5224; 0 16738 TABLE DATA public student_bad postgres
+5223; 0 16716 TABLE DATA public student_enrollments postgres
+5226; 0 16752 TABLE DATA public student_phones postgres
+5219; 0 16690 TABLE DATA public students postgres
+5232; 0 16806 TABLE DATA public students_3nf postgres
+5230; 0 16794 TABLE DATA public students_bad postgres
+5243; 0 16896 TABLE DATA public students_lab11 postgres
+5245; 0 16904 TABLE DATA public students_lab11_copy postgres
+5209; 0 16501 TABLE DATA public transactions postgres
+5266; 0 0 SEQUENCE SET public authors_author_id_seq postgres
+5267; 0 0 SEQUENCE SET public books_book_id_seq postgres
+5268; 0 0 SEQUENCE SET public courses_course_id_seq postgres
+5269; 0 0 SEQUENCE SET public customers_customer_id_seq postgres
+5270; 0 0 SEQUENCE SET public departments_dept_id_seq postgres
+5271; 0 0 SEQUENCE SET public employees_emp_id_seq postgres
+5272; 0 0 SEQUENCE SET public loans_loan_id_seq postgres
+5273; 0 0 SEQUENCE SET public members_member_id_seq postgres
+5274; 0 0 SEQUENCE SET public orders_order_id_seq postgres
+5275; 0 0 SEQUENCE SET public student_enrollments_enrollment_id_seq postgres
+5276; 0 0 SEQUENCE SET public students_lab11_copy_student_id_seq postgres
+5277; 0 0 SEQUENCE SET public students_lab11_student_id_seq postgres
+5278; 0 0 SEQUENCE SET public students_student_id_seq postgres
+5279; 0 0 SEQUENCE SET public transactions_transaction_id_seq postgres
+5033; 2606 16827 CONSTRAINT public authors authors_pkey postgres
+5039; 2606 16846 CONSTRAINT public book_authors book_authors_pkey postgres
+5035; 2606 16839 CONSTRAINT public books books_isbn_key postgres
+5037; 2606 16837 CONSTRAINT public books books_pkey postgres
+5023; 2606 16776 CONSTRAINT public courses_2nf courses_2nf_pkey postgres
+5007; 2606 16714 CONSTRAINT public courses courses_course_code_key postgres
+5009; 2606 16712 CONSTRAINT public courses courses_pkey postgres
+4997; 2606 16523 CONSTRAINT public customers customers_pkey postgres
+5029; 2606 16805 CONSTRAINT public departments_3nf departments_3nf_pkey postgres
+4999; 2606 16671 CONSTRAINT public departments departments_pkey postgres
+5001; 2606 16683 CONSTRAINT public employees employees_pkey postgres
+5025; 2606 16783 CONSTRAINT public enrollments_2nf enrollments_2nf_pkey postgres
+5021; 2606 16770 CONSTRAINT public enrollments_bad enrollments_bad_pkey postgres
+5045; 2606 16883 CONSTRAINT public loans loans_pkey postgres
+5041; 2606 16870 CONSTRAINT public members members_email_key postgres
+5043; 2606 16868 CONSTRAINT public members members_pkey postgres
+4995; 2606 16516 CONSTRAINT public orders orders_pkey postgres
+5017; 2606 16751 CONSTRAINT public student_1nf student_1nf_pkey postgres
+5015; 2606 16745 CONSTRAINT public student_bad student_bad_pkey postgres
+5011; 2606 16725 CONSTRAINT public student_enrollments student_enrollments_pkey postgres
+5013; 2606 16727 CONSTRAINT public student_enrollments student_enrollments_student_id_course_id_key postgres
+5019; 2606 16758 CONSTRAINT public student_phones student_phones_pkey postgres
+5031; 2606 16811 CONSTRAINT public students_3nf students_3nf_pkey postgres
+5027; 2606 16799 CONSTRAINT public students_bad students_bad_pkey postgres
+5003; 2606 16701 CONSTRAINT public students students_email_key postgres
+5049; 2606 16910 CONSTRAINT public students_lab11_copy students_lab11_copy_pkey postgres
+5047; 2606 16902 CONSTRAINT public students_lab11 students_lab11_pkey postgres
+5005; 2606 16699 CONSTRAINT public students students_pkey postgres
+4993; 2606 16508 CONSTRAINT public transactions transactions_pkey postgres
+5057; 2606 16852 FK CONSTRAINT public book_authors book_authors_author_id_fkey postgres
+5058; 2606 16847 FK CONSTRAINT public book_authors book_authors_book_id_fkey postgres
+5050; 2606 16684 FK CONSTRAINT public employees employees_dept_id_fkey postgres
+5054; 2606 16789 FK CONSTRAINT public enrollments_2nf enrollments_2nf_course_id_fkey postgres
+5055; 2606 16784 FK CONSTRAINT public enrollments_2nf enrollments_2nf_student_id_fkey postgres
+5059; 2606 16889 FK CONSTRAINT public loans loans_book_id_fkey postgres
+5060; 2606 16884 FK CONSTRAINT public loans loans_member_id_fkey postgres
+5051; 2606 16733 FK CONSTRAINT public student_enrollments student_enrollments_course_id_fkey postgres
+5052; 2606 16728 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey postgres
+5053; 2606 16759 FK CONSTRAINT public student_phones student_phones_student_id_fkey postgres
+5056; 2606 16812 FK CONSTRAINT public students_3nf students_3nf_department_id_fkey postgres
+
+-- backup into a new database
+university=# CREATE DATABASE university_restore;
+CREATE DATABASE
+university=#
+C:\Users\sulta>pg_restore -h localhost -U postgres -d university_restore "C:\Users\sulta\Desktop\study\Database\university_backup.dump"
+university=# \c university_restore
+You are now connected to database "university_restore" as user "postgres".
+university_restore=# \dt
+                 List of tables
+ Schema |        Name         | Type  |  Owner
+--------+---------------------+-------+----------
+ public | authors             | table | postgres
+ public | book_authors        | table | postgres
+ public | books               | table | postgres
+ public | courses             | table | postgres
+ public | courses_2nf         | table | postgres
+ public | customers           | table | postgres
+ public | departments         | table | postgres
+ public | departments_3nf     | table | postgres
+ public | employees           | table | postgres
+ public | employees_contacts  | table | postgres
+ public | employees_copy      | table | postgres
+ public | enrollments_2nf     | table | postgres
+ public | enrollments_bad     | table | postgres
+ public | loans               | table | postgres
+ public | members             | table | postgres
+ public | orders              | table | postgres
+ public | student_1nf         | table | postgres
+ public | student_bad         | table | postgres
+ public | student_enrollments | table | postgres
+ public | student_phones      | table | postgres
+ public | students            | table | postgres
+ public | students_3nf        | table | postgres
+ public | students_bad        | table | postgres
+ public | students_lab11      | table | postgres
+ public | students_lab11_copy | table | postgres
+ public | transactions        | table | postgres
+(26 rows)
+
+
+university_restore=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id |         email          | age
+--------+------------+-----------+----------------------+----------+------------+---------+------------------------+-----
+      3 | Mike       | Tayson    | DevOps               | 85050.00 | 2026-10-29 |       1 |                        |  18
+      5 | Chop       | Zero      | Architect            | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com          |  21
+      6 | Appa       | Air       | Developer            | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com          |  22
+      7 | Aang       | Avatar    | Director             | 80000.00 | 2025-06-21 |       4 | aa4@gmail.com          |  22
+      8 | Toph       | Beiphong  | Lead                 | 75000.00 | 2025-09-25 |       5 | tb@gmail.com           |  23
+      9 | Katara     | Onelove   | Engineer             | 75000.00 | 2025-09-25 |       6 | ko@gmail.com           |  25
+      4 | Sara       | Phan      | Marketing Specialist | 39050.00 | 2026-10-29 |       2 |                        |  20
+      2 | Muller     | Doe       | Senior               | 92000.00 | 2026-10-29 |       1 |                        |  18
+      1 | John       | Smith     | Senior Developer     | 99000.00 | 2026-10-29 |       1 | john.updated@gmail.com |  18
+(9 rows)
+
+
+university_restore=#
+
+-- Advanced pg_dump options
+--the database structure without employee records
+C:\Users\sulta>pg_dump -h localhost -U postgres -d university -s -f "C:\Users\sulta\Desktop\study\Database\schema_only.sql"
+--the records without the table definitions
+C:\Users\sulta>pg_dump -h localhost -U postgres -d university -a -f "C:\Users\sulta\Desktop\study\Database\data_only.sql"
+--back up everything except employees_copy
+C:\Users\sulta>pg_dump -h localhost -U postgres -d university -T employees_copy -f "C:\Users\sulta\Desktop\study\Database\backup_without_copy.sql"
+
+--Full backup of university database
+C:\Users\sulta>pg_dump -h localhost -U postgres -d university -Fc -v -f "C:\Users\sulta\Desktop\study\Database\full_university_backup.dump"
+
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "public.authors"
+pg_dump: dumping contents of table "public.book_authors"
+pg_dump: dumping contents of table "public.books"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.courses_2nf"
+pg_dump: dumping contents of table "public.customers"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.departments_3nf"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.employees_contacts"
+pg_dump: dumping contents of table "public.employees_copy"
+pg_dump: dumping contents of table "public.enrollments_2nf"
+pg_dump: dumping contents of table "public.enrollments_bad"
+pg_dump: dumping contents of table "public.loans"
+pg_dump: dumping contents of table "public.members"
+pg_dump: dumping contents of table "public.orders"
+pg_dump: dumping contents of table "public.student_1nf"
+pg_dump: dumping contents of table "public.student_bad"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.student_phones"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.students_3nf"
+pg_dump: dumping contents of table "public.students_bad"
+pg_dump: dumping contents of table "public.students_lab11"
+pg_dump: dumping contents of table "public.students_lab11_copy"
+pg_dump: dumping contents of table "public.transactions"
+
+
+-- WAL management
+university_restore=# SELECT pg_switch_wal();
+ pg_switch_wal
+---------------
+ 0/3E1A698
+(1 row)
+
+
+university_restore=# SELECT pg_current_wal_lsn();
+ pg_current_wal_lsn
+--------------------
+ 0/4000060
+(1 row)
+
+
+university_restore=# SELECT pg_create_restore_point('before_data_migration');
+ pg_create_restore_point
+-------------------------
+ 0/40000C8
+(1 row)
+
+
+-- Migration best prsctices
+university_restore=# SELECT COUNT(*) FROM employees;
+ count
+-------
+     9
+(1 row)
+
+
+university_restore=# SELECT * FROM employees LIMIT 3;
+ emp_id | first_name | last_name | position  |  salary  | hire_date  | dept_id |     email     | age
+--------+------------+-----------+-----------+----------+------------+---------+---------------+-----
+      3 | Mike       | Tayson    | DevOps    | 85050.00 | 2026-10-29 |       1 |               |  18
+      5 | Chop       | Zero      | Architect | 50000.00 | 2025-09-04 |       3 | sc4@gmail.com |  21
+      6 | Appa       | Air       | Developer | 70000.00 | 2025-02-05 |       3 | aa5@gmail.com |  22
+(3 rows)
+
+
+university_restore=# SELECT
+university_restore-# pid, usename, application_name, client_addr, state
+university_restore-# FROM pg_stat_activity
+university_restore-# WHERE application_name = 'pg_dump';
+ pid | usename | application_name | client_addr | state
+-----+---------+------------------+-------------+-------
+(0 rows)
+
+
+university_restore=#
+
+
+
+
+
+
