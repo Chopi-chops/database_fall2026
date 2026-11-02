@@ -159,3 +159,118 @@ university-# WHERE age < 23;
 
 
 university=# -- Window Functions and Partioning
+university=# SELECT first_name, last_name, dept_id, salary,
+university-# RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS dept_salary_rank
+university-# FROM employees;
+ first_name | last_name | dept_id |  salary  | dept_salary_rank
+------------+-----------+---------+----------+------------------
+ Mike       | Tayson    |       1 | 85050.00 |                1
+ Muller     | Doe       |       1 | 85000.00 |                2
+ John       | Smith     |       1 | 75000.00 |                3
+ Sara       | Phan      |       2 | 35050.00 |                1
+ Appa       | Air       |       3 | 70000.00 |                1
+ Chop       | Zero      |       3 | 50000.00 |                2
+ Aang       | Avatar    |       4 | 80000.00 |                1
+ Toph       | Beiphong  |       5 | 75000.00 |                1
+ Katara     | Onelove   |       6 | 75000.00 |                1
+(9 rows)
+
+
+university=# SELECT * FROM departments;
+ dept_id |       dept_name       |  manager_name  |  budget
+---------+-----------------------+----------------+-----------
+       1 | SFW                   | Alice Wonder   | 500000.00
+       2 | HR                    | Bob Dob        | 300000.00
+       3 | System Administration | Lalisa Manoban | 400000.00
+       4 | Development           | Rose Pack      | 600000.00
+       5 | DevOps                | Jennie Solo    | 700000.00
+       6 | Cybersecurity         | Jichu Rabbit   | 800000.00
+(6 rows)
+
+
+university=# -- Pivot and Unpivot Operations
+university=# -- Pivoting with Conditional Aggregation (Most Common):
+university=# SELECT
+university-# SUM(CASE WHEN dept_id = 1 THEN salary ELSE 0 END) AS sfw_sal,
+university-# SUM(CASE WHEN dept_id = 2 THEN salary ELSE 0 END) AS hr_sal,
+university-# SUM(CASE WHEN dept_id = 3 THEN salary ELSE 0 END) AS admin_sal,
+university-# SUM(CASE WHEN dept_id = 4 THEN salary ELSE 0 END) AS devop_sal
+university-# FROM employees;
+  sfw_sal  |  hr_sal  | admin_sal | devop_sal
+-----------+----------+-----------+-----------
+ 245050.00 | 35050.00 | 120000.00 |  80000.00
+(1 row)
+
+
+university=# -- Unpivoting with UNION ALL:
+university=# WITH pivoted_salaries AS (
+university(# SELECT
+university(# SUM(CASE WHEN dept_id = 1 THEN salary ELSE 0 END) AS sfw_sal,
+university(# SUM(CASE WHEN dept_id = 2 THEN salary ELSE 0 END) AS hr_sal,
+university(# SUM(CASE WHEN dept_id = 3 THEN salary ELSE 0 END) AS admin_sal,
+university(# SUM(CASE WHEN dept_id = 4 THEN salary ELSE 0 END) AS devop_sal
+university(# FROM employees)
+university-# SELECT 'SFW' AS dept_name, sfw_sal AS total_salary FROM pivoted_salaries
+university-# UNION ALL
+university-# SELECT 'HR' AS dept_name, hr_sal AS total_salary FROM pivoted_salaries
+university-# UNION ALL
+university-# SELECT 'System Administration' AS dept_name, admin_sal AS total_salary FROM pivoted_salaries
+university-# UNION ALL
+university-# SELECT 'Development' AS dept_name, devop_sal AS total_salary FROM pivoted_salaries;
+       dept_name       | total_salary
+-----------------------+--------------
+ SFW                   |    245050.00
+ HR                    |     35050.00
+ System Administration |    120000.00
+ Development           |     80000.00
+(4 rows)
+
+
+university=# -- Complex Filtering and Sorting
+university=# -- Filtering:
+university=# SELECT
+university-# first_name, age, salary,
+university-# SUM(salary) OVER (PARTITION BY dept_id) AS total_dept_salary,
+university-# AVG(salary) FILTER (WHERE age > 20) OVER() AS avg_salary_over_20
+university-# FROM employees;
+ first_name | age |  salary  | total_dept_salary | avg_salary_over_20
+------------+-----+----------+-------------------+--------------------
+ John       |  18 | 75000.00 |         245050.00 | 70000.000000000000
+ Muller     |  18 | 85000.00 |         245050.00 | 70000.000000000000
+ Mike       |  18 | 85050.00 |         245050.00 | 70000.000000000000
+ Sara       |  20 | 35050.00 |          35050.00 | 70000.000000000000
+ Chop       |  21 | 50000.00 |         120000.00 | 70000.000000000000
+ Appa       |  22 | 70000.00 |         120000.00 | 70000.000000000000
+ Aang       |  22 | 80000.00 |          80000.00 | 70000.000000000000
+ Toph       |  23 | 75000.00 |          75000.00 | 70000.000000000000
+ Katara     |  25 | 75000.00 |          75000.00 | 70000.000000000000
+(9 rows)
+
+
+university=# -- Sorting:
+university=# -- Custom Sorting with CASE
+university=# SELECT last_name, position, salary
+university-# FROM employees
+university-# ORDER BY
+university-# CASE position
+university-# WHEN 'SFW' THEN 1
+university-# WHEN 'Senior' THEN 2
+university-# WHEN 'Marketing Specialist' THEN 3
+university-# WHEN 'Architect' THEN 4
+university-# ELSE 5
+university-# END, salary DESC;
+ last_name |       position       |  salary
+-----------+----------------------+----------
+ Smith     | SFW                  | 75000.00
+ Doe       | Senior               | 85000.00
+ Phan      | Marketing Specialist | 35050.00
+ Zero      | Architect            | 50000.00
+ Tayson    | DevOps               | 85050.00
+ Avatar    | Director             | 80000.00
+ Beiphong  | Lead                 | 75000.00
+ Onelove   | Engineer             | 75000.00
+ Air       | Developer            | 70000.00
+(9 rows)
+
+
+university=#
