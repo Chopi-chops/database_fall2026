@@ -285,5 +285,49 @@ university-# ORDER BY s.first_name, c.course_name;
 
 university=# \c shop
 You are now connected to database "shop" as user "postgres".
-shop=#
+shop=# -- Perfomance Considerations
+shop=# -- Indexes
+shop=# CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+CREATE INDEX
+shop=# -- Table Aliases
+shop=# SELECT c.name, o.order_date
+shop-# FROM customers c
+shop-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+       name       | order_date
+------------------+------------
+ Twilight Sparkle | 2026-03-07
+ Rainbow Dash     | 2026-02-15
+ Flutter Shy      | 2026-01-23
+(3 rows)
+
+
+shop=# -- COMMON PITFALLS and HOW to avoid them
+shop=# -- 1. Cartesian Products
+shop=# SELECT c.name, o.order_date
+shop-# FROM customers c, orders o;
+       name       | order_date
+------------------+------------
+ Twilight Sparkle | 2026-03-07
+ Twilight Sparkle | 2026-02-15
+ Twilight Sparkle | 2026-01-23
+ Rainbow Dash     | 2026-03-07
+ Rainbow Dash     | 2026-02-15
+ Rainbow Dash     | 2026-01-23
+ Flutter Shy      | 2026-03-07
+ Flutter Shy      | 2026-02-15
+ Flutter Shy      | 2026-01-23
+(9 rows)
+
+
+shop=# -- 2. Null Value Confusion
+shop=# -- IS NULL OR IS NOT NULL appropriately
+shop=# SELECT c.name
+shop-# FROM customers c
+shop-# LEFT JOIN orders o ON c.customer_id = o.customer_id
+shop-# WHERE o.customer_id IS NULL;
+ name
+------
+(0 rows)
+
+
 
