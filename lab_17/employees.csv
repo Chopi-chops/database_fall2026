@@ -1,0 +1,10 @@
+emp_id,first_name,last_name,position,salary,hire_date,dept_id,email,age
+3,Mike,Tayson,DevOps,85050.00,2026-10-29,1,,18
+5,Chop,Zero,Architect,50000.00,2025-09-04,3,sc4@gmail.com,21
+6,Appa,Air,Developer,70000.00,2025-02-05,3,aa5@gmail.com,22
+7,Aang,Avatar,Director,80000.00,2025-06-21,4,aa4@gmail.com,22
+8,Toph,Beiphong,Lead,75000.00,2025-09-25,5,tb@gmail.com,23
+9,Katara,Onelove,Engineer,75000.00,2025-09-25,6,ko@gmail.com,25
+4,Sara,Phan,Marketing Specialist,39050.00,2026-10-29,2,,20
+2,Muller,Doe,Senior,92000.00,2026-10-29,1,,18
+1,John,Smith,Senior Developer,99000.00,2026-10-29,1,john.updated@gmail.com,18
