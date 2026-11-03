@@ -34,3 +34,30 @@ I commit to:
 - 'lab_16': Transactions and ACID Properties
 - 'lab_17': Data Import/Export and Backup
 - 'Oracle Academy': Certificate of Completion
+
+---
+
+## Tools and Technologies
+
+- **PostgreSQL** — Relational Database Management System
+- **SQL** — Database Query Language
+- **psql** — PostgreSQL Command-Line Interface
+- **pgAdmin** — Database Administration and Visualization
+- **Git & GitHub** — Version Control and Repository Management
+
+---
+
+## Final Project
+
+The final project will be added to this repository as it is developed.
+
+According to the course syllabus, the final project includes:
+
+- **Database Schema and ER Diagram**
+- **PostgreSQL Database Implementation**
+- **Basic and Advanced SQL Queries**
+- **Transactions and Indexing Demonstration**
+- **Database Backup and Recovery Strategy**
+
+
+
